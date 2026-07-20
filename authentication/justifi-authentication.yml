@@ -1,0 +1,38 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.justifi.tech/gettingStarted
+docs: https://docs.justifi.tech/gettingStarted
+note: >-
+  The published OpenAPI declares no components.securitySchemes; the authentication
+  model below is captured from the JustiFi getting-started documentation.
+summary:
+  types: [oauth2, apiKey]
+  api_key_in: [header]
+  oauth2_flows: [clientCredentials]
+schemes:
+  - name: OAuthClientCredentials
+    type: oauth2
+    flow: clientCredentials
+    token_url: https://api.justifi.ai/oauth/token
+    description: >-
+      POST your JustiFi client id and client secret to the token endpoint to
+      receive an access token valid for 24 hours. Test keys are prefixed test_
+      and live keys are prefixed live_; the key you authenticate with selects the
+      test or live account.
+    token_ttl_seconds: 86400
+  - name: BearerToken
+    type: http
+    scheme: bearer
+    in: header
+    parameter: Authorization
+    description: >-
+      Pass the access token from the client-credentials grant in the
+      Authorization header on all subsequent requests. A 401 Unauthorized
+      response means the token expired and a new one must be requested.
+  - name: SubAccountHeader
+    type: apiKey
+    in: header
+    parameter: Sub-Account
+    description: >-
+      Platforms scope a request to one of their sub accounts (merchants) by
+      passing that sub account id in the Sub-Account request header.
