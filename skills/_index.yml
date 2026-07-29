@@ -1,0 +1,12 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/justifi-openapi-original.yml
+skills:
+  - file: justifi-accept-a-payment.md
+    name: Accept a card payment with JustiFi
+    api: openapi/justifi-openapi-original.yml
+    operations: [CreatePaymentMethod, CreatePayment, GetPayment, CapturePayment, CreateRefund]
+  - file: justifi-onboard-a-sub-account.md
+    name: Onboard a merchant sub account with JustiFi
+    api: openapi/justifi-openapi-original.yml
+    operations: [CreateSubAccount, CreateBusiness, ProductProvisioning, CreateFeeConfiguration, GetSubAccount, GetPayoutAccount]

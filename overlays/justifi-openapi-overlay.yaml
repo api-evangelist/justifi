@@ -1,0 +1,20 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for JustiFi API
+  version: 1.0.0
+extends: openapi/justifi-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: justifi
+      x-apievangelist-category: payments
+      x-apievangelist-auth: oauth2-client-credentials
+      x-apievangelist-idempotency-header: Idempotency-Key
+      x-apievangelist-pagination: cursor
+      x-apievangelist-events: webhooks
+  - target: $.servers[0]
+    update:
+      x-apievangelist-environment: production
+  - target: $.info
+    update:
+      x-apievangelist-compliance: [PCI-DSS-L1, SOC2, GDPR]

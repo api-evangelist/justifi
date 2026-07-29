@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.justifi.tech/gettingStarted
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.justifi.ai/v1
+  docs: https://docs.justifi.tech/api-spec
+status_page: https://status.justifi.ai
+sla:
+  url: https://status.justifi.ai
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: No public deprecation / Sunset-header policy located at enrichment time.
+deprecated_operations: []

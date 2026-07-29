@@ -1,0 +1,53 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/justifi-tech + npm/rubygems registries
+packages:
+  - language: javascript
+    registry: npm
+    name: "@justifi/justifi-node"
+    version: 0.6.0
+    url: https://www.npmjs.com/package/@justifi/justifi-node
+    repo: https://github.com/justifi-tech/justifi-node
+    install: npm install @justifi/justifi-node
+    description: JustiFi Node.js / TypeScript server SDK.
+    official: true
+  - language: ruby
+    registry: rubygems
+    name: justifi
+    version: 0.11.0
+    url: https://rubygems.org/gems/justifi
+    repo: https://github.com/justifi-tech/justifi-ruby
+    install: gem install justifi
+    description: JustiFi Ruby gem for server-side API access.
+    official: true
+  - language: go
+    registry: github
+    name: github.com/justifi-tech/justifi-go
+    url: https://github.com/justifi-tech/justifi-go
+    install: go get github.com/justifi-tech/justifi-go
+    description: JustiFi Go client library.
+    official: true
+  - language: kotlin
+    registry: github
+    name: justifi-react-native-sdk
+    url: https://github.com/justifi-tech/justifi-react-native-sdk
+    install: npm install @justifi/react-native-justifi
+    description: JustiFi React Native SDK for mobile payment capture.
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@justifi/webcomponents"
+    version: 6.14.3
+    url: https://www.npmjs.com/package/@justifi/webcomponents
+    repo: https://github.com/justifi-tech/web-component-library
+    install: npm install @justifi/webcomponents
+    description: JustiFi StencilJS web components (PCI-scope-reducing UI).
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@justifi/react-components"
+    version: 4.6.1
+    url: https://www.npmjs.com/package/@justifi/react-components
+    install: npm install @justifi/react-components
+    description: React wrappers for JustiFi web components.
+    official: true

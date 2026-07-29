@@ -1,8 +1,27 @@
 aid: justifi
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/justifi.png
 name: JustiFi
-description: 'JustiFi is a company surfaced as a portfolio company of emergence-capital and added to the
-  API Evangelist network as a stub for enrichment. Sector: fintech. This profile is a lead awaiting the
-  enrichment pipeline.'
+description: >-
+  JustiFi is an embedded-payments and PayFac-as-a-service platform that lets SaaS
+  companies add payment processing to their software. Its REST API (base
+  https://api.justifi.ai/v1) plus StencilJS web components handle sub-merchant
+  onboarding, card and bank-account tokenization, payments, refunds, disputes,
+  payouts, proceeds, checkouts, and card-present terminals, while JustiFi carries
+  the PCI-DSS Level 1, SOC 2, and GDPR compliance burden. Authentication is OAuth
+  2.0 client-credentials yielding 24-hour Bearer tokens, with idempotent money
+  movement, cursor pagination, and webhook events. Backed by Emergence Capital.
 url: https://raw.githubusercontent.com/api-evangelist/justifi/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -12,16 +31,1000 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
 - Fintech
-apis: []
+- Payments
+- Embedded Payments
+- Payment Facilitation
+- Payouts
+- Developers
+- API
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: justifi:justifi-ach-return-fees-api
+  name: JustiFi Ach Return Fees API
+  description: >-
+    ACH return fees are fees charged by financial institutions when an ACH (Automated Clearing House)
+    transaction
+
+    is returned due to insufficient funds or other reasons.
+
+    If an ACH transaction is returned for any reason, the financial institution may charge a fee to the
+    sender of the transaction.
+
+    These fees can vary depending on the policies of the financial institution and the reason for the
+    return.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Ach Return Fees
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-ach-return-fees-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-address-api
+  name: JustiFi Address API
+  description: >-
+    Creating an Address entity provides the necessary information to identify and locate a physical address.
+    It may be associated with an Identity entity or Business entity to provide a more complete picture
+    of the parties involved.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Address
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-address-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-api-credentials-api
+  name: JustiFi API Credentials API
+  description: The API Credentials API from JustiFi — 1 operation(s) for api credentials.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - API Credentials
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-api-credentials-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-balance-transactions-api
+  name: JustiFi Balance Transactions API
+  description: >-
+    Balance transactions are the reflection of any movement of funds that affects the balance of an account.
+
+    Oftentimes, a single financial transaction (like a payment) will result in the creation of many balance
+
+    transactions in order to document the flow of funds between multiple accounts. Other financial transactions
+
+    that result in balance transactions include refunds, disputes, and payouts.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Balance Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-balance-transactions-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-bank-account-api
+  name: JustiFi Bank Account API
+  description: >-
+    Create/manage bank accounts for your businesses. These accounts are used for paying out earnings for
+    usage of various products, for example card processing.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Bank Account
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-bank-account-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-bind-insurance-api
+  name: JustiFi Bind Insurance API
+  description: The Bind Insurance API from JustiFi — 1 operation(s) for bind insurance.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Bind Insurance
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-bind-insurance-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-business-api
+  name: JustiFi Business API
+  description: >-
+    Creating a business entity is an essential step in integrating your business operations with JustiFi.
+
+    It is also necessary to comply with local laws and regulations governing your operations.
+
+    To create a new business entity, you will need to provide basic information such as the business name,
+    website, business type, business structure, and your industry.
+
+    You may also add details like the legal address, tax ID, and ownership structure.
+
+    Providing detailed and accurate information about the business entity is essential for ensuring legal
+    compliance, financial accuracy, and it can also help avoid potential legal and financial issues.
+
+
+    Business classification encompasses both the type of business and its operational structure.
+
+    Use the following table to map your current business type and structure to the correct business classification:
+
+
+    | Business Type     | Business Structure                    | Business Classification |
+
+    | -------------     | ------------------                    | ----------------------- |
+
+    | individual        | *                                     | sole_proprietor         |
+
+    | for_profit        | unincorporated_association            | sole_proprietor         |
+
+    | for_profit        | sole_proprietorship                   | sole_proprietor         |
+
+    | for_profit        | public_partnership                    | partnership             |
+
+    | for_profit        | private_partnership                   | partnership             |
+
+    | for_profit        | private_corporation                   | corporation             |
+
+    | for_profit        | public_corporation                    | public_company          |
+
+    | for_profit        | multi_llc                             | limited                 |
+
+    | for_profit        | single_llc                            | limited                 |
+
+    | non_profit        | incorporated                          | non_profit              |
+
+    | non_profit        | unincorporated                        | non_profit              |
+
+    | government_entity | government_unit                       | government              |
+
+    | government_entity | government_instrumentality            | government              |
+
+    | government_entity | tax_exempt_government_instrumentality | government              |
+
+
+    Please, choose whether you want to use the business classification (preferred) or the business type
+    and structure (deprecated), but not both. Business classification is a simplification of business
+    type and structure with the same goals.
+
+
+    _Note: If you use the classification, it will not have the exact same correspondence with the business
+    type and structure from the previous table because there are fewer classifications than types/structures._
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Business
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-business-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-checkouts-api
+  name: JustiFi Checkouts API
+  description: >-
+    Checkouts can be used to collect payments directly via API, or using our Checkout component.
+
+    You can use a checkout to complete a payment via JustiFi, via BNPL, via terminal,
+
+    and to purchase insurance in a single transaction.
+
+
+    All attempts to complete a payment will be recorded, along with the outcome of a payment.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Checkouts
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-checkouts-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-disputes-api
+  name: JustiFi Disputes API
+  description: >-
+    A customer may dispute their payment with the card issuer/bank if they believe
+
+    the charge is erroneous. When this happens, a dispute record is created and
+
+    associated with their original payment.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Disputes
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-disputes-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-document-api
+  name: JustiFi Document API
+  description: >-
+    Create/manage documents attached to your businesses and identities. When a document record
+
+    is created using this API the response object returns a presigned url used to upload this
+
+    document to an encrypted bucket. The presigned url can then be used to upload directly to an
+
+    AWS s3 bucket, with a command like `curl -X PUT -T /path/to/file.pdf "insert presigned url"`.
+
+    You must use the PUT method. This can also be accomplished from a backend or mobile app, from the
+    browser or using our web components.
+
+    After upload is complete the status changes from `pending` to `uploaded`.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Document
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-document-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-fee-configurations-api
+  name: JustiFi Fee Configurations API
+  description: >-
+    Standard Fee Configurations allow platforms to set per-sub-account fee rates that are automatically
+    applied at payment time. Configurations are managed per fee type — creating a new configuration for
+    the same fee type automatically retires the previous one.
+
+
+    For a detailed guide on configurable fees, including the fee hierarchy, calculation formula, and examples,
+    see the [Configurable Fees documentation](https://docs.justifi.tech/configurableFees/overview).
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Fee Configurations
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-fee-configurations-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-identity-api
+  name: JustiFi Identity API
+  description: >-
+    Creating an identity establishes a unique identification for people associated with your business.
+    Accurately providing your information is crucial in ensuring that your identity is properly verified
+    and maintained, and can have important consequences for a variety of financial and legal transactions.
+    Our platform has a secure database for storing identity information, encryption and other security
+    measures to protect your sensitive data.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Identity
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-identity-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-payment-method-groups-api
+  name: JustiFi Payment Method Groups API
+  description: >-
+    Payment method groups are a way to associate payment methods to a single group for easy access.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Payment Method Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-payment-method-groups-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-payment-methods-api
+  name: JustiFi Payment Methods API
+  description: >-
+    Payment methods refer to the specific form of payment each customer uses
+
+    (e.g. their credit card). Payment methods are tokenized, then charged at time of payment.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-payment-methods-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-payments-api
+  name: JustiFi Payments API
+  description: >-
+    To charge a payment method the desired amount, you'll use a payment.
+
+    You can choose whether to charge a payment method that's already been
+
+    tokenized or tokenize a new one when you create the payment.
+
+    If a payment fails, the status will reflect it and an error code will be returned.
+
+    You can retrieve information about your payments and refund them if needed.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-payments-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-payout-holds-api
+  name: JustiFi Payout Holds API
+  description: >-
+    A payout hold is a resource that temporarily hold or pause payouts for a sub account.
+
+    This feature is used for risk management, compliance, or business rule enforcement.
+
+    Holds can be created automatically by the system (e.g., for first payments) or manually by JustiFi
+    staff..
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Payout Holds
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-payout-holds-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-payouts-api
+  name: JustiFi Payouts API
+  description: >-
+    Each day, a payout containing that day's funds is automatically created for the
+
+    purpose of distributing those funds to the active bank account. Payout amounts are calculated by
+
+    summing the associated balance transactions for that specific day.
+
+
+    Payouts are processed each day at 11:30am US/Central time. A Platform can also configure each
+
+    sub account to have an expedited payout priority. If this is enabled, the payout will be settled on
+    the
+
+    day the payout is generated. Otherwise, standard payouts will settle the next business day.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-payouts-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-proceeds-api
+  name: JustiFi Proceeds API
+  description: >-
+    Proceeds represent your platform's take-home portion of the fees from your sub account's financial
+    transactions.
+
+    Proceeds are batched together according to the payout schedule configured on your account, then transferred
+
+    to your active bank account.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Proceeds
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-proceeds-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-provisioning-api
+  name: JustiFi Provisioning API
+  description: >-
+    Provisioning API for Products serves as an automated interface to configure resources based on your
+    current entities informations, for example creating an account for card processing.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Provisioning
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-provisioning-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-refunds-api
+  name: JustiFi Refunds API
+  description: >-
+    When you refund a payment, a refund object is created. You can retrieve
+
+    information about the refunds you've issued.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-refunds-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-reports-api
+  name: JustiFi Reports API
+  description: >-
+    Reports can be used to pull data for various different resources. They are CSV format, and can be
+    filtered by date and sub account.
+
+    Once a the create endpoint is called via POST, a report will be in `created` status. The report will
+    move to `processing` status once it is being generated.
+
+    Finally, when the report is generated, and the CSV file is available, the report will be in `completed`
+    status.
+
+
+    To download a report, you can use the `download_url` provided in the response when retrieving a report.
+    We use presigned URLs to allow you to download the report directly
+
+    from our S3 bucket.
+
+
+    ## Report Types
+
+
+    ### Payout Report
+
+    Contains balance transaction data for payouts.
+
+
+    | Column | Description |
+
+    | ------ | ----------- |
+
+    | id | Balance transaction ID |
+
+    | type | Transaction type |
+
+    | currency | Currency |
+
+    | amount | Amount in cents |
+
+    | fee | Fee amount in cents |
+
+    | net | Net amount in cents |
+
+    | source_id | Source object ID |
+
+    | source_account_id | Source account ID |
+
+    | source_type | Source object type |
+
+    | source_amount | Source amount in cents |
+
+    | available_on | When funds become available |
+
+    | payment_id | Associated payment ID |
+
+    | created_at | Creation timestamp |
+
+    | payment_method_name | Payment method name |
+
+    | source_payment_id | Payment ID associated with the source |
+
+    | payout_id | Associated payout ID |
+
+    | payout_created_at | Payout creation timestamp |
+
+    | payout_deposits_at | Expected payout deposit date |
+
+
+    ### Proceeds Report
+
+    Contains platform proceeds data.
+
+
+    | Column | Description |
+
+    | ------ | ----------- |
+
+    | id | Balance transaction ID |
+
+    | type | Transaction type |
+
+    | currency | Currency code |
+
+    | amount | Amount in cents |
+
+    | fee | Fee amount in cents |
+
+    | net | Net amount in cents |
+
+    | source_id | Source object ID |
+
+    | source_account_id | Source account ID |
+
+    | source_type | Source object type |
+
+    | source_amount | Source amount in cents |
+
+    | application_fee_amount | Application fee in cents |
+
+    | platform_fee_amount | Platform fee in cents |
+
+    | proceeds | Calculated proceeds in cents |
+
+    | available_on | When funds become available |
+
+    | created_at | Creation timestamp |
+
+    | fee_major_category | Fee major category |
+
+    | fee_minor_category | Fee minor category |
+
+    | fee_description | Fee description |
+
+    | fee_product_code | Fee product code |
+
+    | fee_batch_date | Fee batch date |
+
+    | payment_method_type | Payment method type |
+
+    | payment_method_brand | Payment method brand |
+
+    | source_payment_id | Payment ID associated with the source |
+
+    | payout_id | Associated payout ID |
+
+    | payout_created_at | Payout creation timestamp |
+
+    | payout_deposits_at | Expected payout deposit date |
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-reports-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-sub-accounts-api
+  name: JustiFi Sub Accounts API
+  description: >-
+    Sub Accounts are the representation of your platform's customers for payment processing in JustiFi
+    and are associated with your platform account.
+
+    To gain approval for payment processing each of your customers need to be onboarded as a business
+    via [web compoenent](https://docs.justifi.tech/api-spec#tag/Onboarding-via-Component), [hosted onboarding](https://docs.justifi.tech/api-spec#tag/Hosted-Onboarding)
+    or [API](https://docs.justifi.tech/api-spec#tag/Onboarding-via-API).
+
+    During the onboarding process a sub account is automatically created for each business and updated
+    along the way.
+
+    Payments can be processed through a sub account once it's status is `enabled`.
+
+    | Status             | Description |
+
+    | -----------        | ----------- |
+
+    | created            | this sub account has been created (via Sub Accounts API), but we haven't received
+    their onboarding entry yet |
+
+    | submitted          | we've received this sub account's onboarding entry (via hosted onboarding or
+    API) and we're reviewing their information |
+
+    | information_needed | we reviewed this sub account's onboarding entry and found an issue; we need
+    more information before we can enable this account |
+
+    | enabled            | this sub account is approved to process payments _note: test accounts are automatically
+    enabled_ |
+
+    | rejected           | this sub account didn't pass approval, so they won't be able to process payments
+    |
+
+    | disabled           | this sub account was previously approved, but has since become ineligible to
+    process payments (e.g. due to fraud) |
+
+    | archived           | this sub account has been archived; they won't be able to process payments
+    (but their record will remain for historical reasons) |
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Sub Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-sub-accounts-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-terminals-api
+  name: JustiFi Terminals API
+  description: >-
+    JustiFi provides a card present solution which allows you to collect a payment via a terminal provider
+    via one of our technology partners.
+
+
+    To collect a payment via terminal, you must first ensure you ask the JustiFi team to enable the card
+    present feature for your platform. Next, we will work to provision and configure terminals for your
+    sub accounts.
+
+
+    Once you have configured a terminal, you must complete the following steps to complete a payment:
+
+
+    1. Create a Checkout
+
+    2. Send a checkout to a terminal
+
+    3. Terminal processes payment async
+
+    4. Handle checkout.completed event (recommended)
+
+    5. OR poll checkouts API for status change (optional)
+
+
+    ### Create a checkout
+
+    [Create a Checkout](https://docs.justifi.tech/api-spec#tag/Checkouts/operation/CreateCheckout) with
+    the amount you'd like to capture, and a description of the payment.
+
+
+    ### Send a checkout to a terminal
+
+    [POST to the terminal pay endpoint](https://docs.justifi.tech/api-spec#tag/Terminals/operation/payTerminal)
+    which will be used to send your checkout to a terminal for processing. This process can take some
+    time as it requires customer interaction. For this reason, the API will return immediately but the
+    process is asynchronusly happening on a terminal.
+
+
+    ### Terminal processes payment async
+
+    At this point, the process is handed over to the terminal to complete. Once the payment transaction
+    is completed, we will publish an event for you to continue the process and take further action, as
+    noted in the next step.
+
+
+    ### Handle checkout.completed event
+
+    Create an [Event Publisher](https://docs.justifi.tech/api-spec#tag/Events) which publishes [`checkout.completed`
+    events](https://docs.justifi.tech/api-spec#tag/Events/operation/checkoutEvent). This will provide
+    a means to ensure the payment was successful. You can also listen to checkout completion events, for
+    example a checkout.completion.failed event will be published each time a card is attempted to be processed
+    but the transaction fails for some reason.
+
+
+    ### Poll checkouts API for status change
+
+    If you do not have the ability to handle event publishing, you could poll our checkout API with the
+    id of the checkout you are processing. Contine to poll until the checkout status attribute changes.
+    We recommend you use the checkout events instead of this approach.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Terminals
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-terminals-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-terminals-orders-api
+  name: JustiFi Terminals Orders API
+  description: Terminals Orders API for order management
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Terminals Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-terminals-orders-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-terms-and-conditions-api
+  name: JustiFi Terms and Conditions API
+  description: >-
+    Legally binding rules and agreements that outline the rights, responsibilities, and limitations governing
+    the use of the platform.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Terms and Conditions
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-terms-and-conditions-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-voids-api
+  name: JustiFi Voids API
+  description: The Voids API from JustiFi — 1 operation(s) for voids.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Voids
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-voids-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-web-component-tokens-api
+  name: JustiFi Web Component Tokens API
+  description: The Web Component Tokens API from JustiFi — 1 operation(s) for web component tokens.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Web Component Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-web-component-tokens-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
 common:
+- type: DeveloperPortal
+  url: https://developer.justifi.ai/
+- type: Documentation
+  url: https://docs.justifi.tech/
+- type: APIReference
+  url: https://docs.justifi.tech/api-spec
+- type: GettingStarted
+  url: https://docs.justifi.tech/gettingStarted
+- type: GitHubOrganization
+  url: https://github.com/justifi-tech
+- type: Blog
+  url: https://justifi.ai/resources/posts
+- type: StatusPage
+  url: https://status.justifi.ai
+- type: Pricing
+  url: https://justifi.ai/pricing
+- type: SignUp
+  url: https://app.justifi.ai/signup
+- type: PrivacyPolicy
+  url: https://justifi.ai/privacy-policy
+- type: Compliance
+  url: https://justifi.ai/security
+- type: Packages
+  url: packages/justifi-packages.yml
+- type: SDKs
+  url: packages/justifi-packages.yml
+- type: CLI
+  url: cli/justifi-cli.yml
+- type: Components
+  url: components/justifi-components.yml
+- type: MCPServer
+  url: mcp/justifi-mcp.yml
+- type: LLMsTxt
+  url: llms/justifi-llms.txt
+- type: Authentication
+  url: authentication/justifi-authentication.yml
+- type: Conventions
+  url: conventions/justifi-conventions.yml
+- type: Idempotency
+  url: conventions/justifi-conventions.yml
+- type: Lifecycle
+  url: lifecycle/justifi-lifecycle.yml
+- type: Conformance
+  url: conformance/justifi-conformance.yml
+- type: Sandbox
+  url: sandbox/justifi-sandbox.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/justifi-agentic-access.yml
+- type: DomainSecurity
+  url: security/justifi-domain-security.yml
 - type: Website
   url: https://www.justifi.ai
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

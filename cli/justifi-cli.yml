@@ -1,0 +1,15 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/justifi-tech/justifi-cli
+cli:
+  name: justifi-cli
+  repo: https://github.com/justifi-tech/justifi-cli
+  language: go
+  description: First-party command-line tool for JustiFi (spec-driven; ships go.mod and specs/).
+  install:
+    - method: source
+      command: go install github.com/justifi-tech/justifi-cli@latest
+  note: >-
+    The public repository exposes the CLI binary and a specs/ directory; a
+    grouped command reference is not published in the repo README at enrichment
+    time, so the command surface is not enumerated here (no fabrication).

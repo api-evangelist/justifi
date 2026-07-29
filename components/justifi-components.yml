@@ -1,0 +1,44 @@
+generated: '2026-07-19'
+method: searched
+source: https://storybook.justifi.ai/
+docs: https://docs.justifi.tech/
+storybook: https://storybook.justifi.ai/
+description: >-
+  JustiFi ships client-side, embeddable UI components (StencilJS web components
+  plus framework wrappers) that tokenize card/bank data in the browser to keep
+  the integrating platform out of PCI scope, and render hosted onboarding,
+  checkout, and reporting surfaces.
+families:
+  - name: Payment capture / tokenization
+    components:
+      - justifi-tokenize-payment-method
+      - justifi-card-form
+      - justifi-bank-account-form
+      - justifi-payment-form
+  - name: Onboarding / provisioning
+    components:
+      - justifi-business-form
+      - justifi-payment-provisioning
+      - justifi-identity-verification-form
+  - name: Checkout
+    components:
+      - justifi-checkout
+  - name: Dashboards / reporting
+    components:
+      - justifi-payments-list
+      - justifi-payouts-list
+      - justifi-payment-details
+loaders:
+  - language: javascript
+    package: "@justifi/webcomponents"
+    registry: npm
+    url: https://www.npmjs.com/package/@justifi/webcomponents
+  - language: react
+    package: "@justifi/react-components"
+    registry: npm
+    url: https://www.npmjs.com/package/@justifi/react-components
+  - language: angular
+    package: "@justifi/angular-components"
+    registry: npm
+    url: https://www.npmjs.com/package/@justifi/angular-components
+    status: deprecated

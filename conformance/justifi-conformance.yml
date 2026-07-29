@@ -1,0 +1,29 @@
+generated: '2026-07-19'
+method: searched
+source: https://justifi.ai/security
+standards:
+  - id: pci-dss
+    conforms: true
+    level: "Level 1"
+    evidence: JustiFi publicly states PCI-DSS Level 1 compliance; tokenization via web components reduces platform PCI scope.
+    source: https://justifi.ai/security
+  - id: soc2
+    conforms: true
+    evidence: JustiFi publicly states SOC 2 compliance.
+    source: https://justifi.ai/security
+  - id: gdpr
+    conforms: true
+    evidence: JustiFi publicly states a GDPR-compliant data vault.
+    source: https://justifi.ai/security
+  - id: oauth2
+    conforms: true
+    evidence: API authenticates via OAuth 2.0 client-credentials grant (docs.justifi.tech/gettingStarted).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: Errors use a JSON error envelope (error.code/message), not application/problem+json.
+  - id: idempotency
+    conforms: true
+    evidence: Idempotency-Key header supported on money-moving requests.
+  - id: cursor-pagination
+    conforms: true
+    evidence: Cursor-based pagination (limit/before_cursor/after_cursor + page_info).

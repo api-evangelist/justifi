@@ -1,0 +1,21 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.justifi.tech/gettingStarted
+modes:
+  - name: test
+    key_prefix: test_
+    description: >-
+      Test account. Requests authenticated with a test key never affect live
+      data or move real money.
+  - name: live
+    key_prefix: live_
+    description: Live account. Real money movement.
+access:
+  api: Authenticate with a test_ client id/secret via the client-credentials grant.
+  dashboard: https://app.justifi.ai/ -> Test Mode (toggle) / Developers
+test_values:
+  note: >-
+    JustiFi provisions test and live accounts each with its own API key; test
+    card numbers and decline-simulation values are surfaced inside the developer
+    dashboard (Test Mode) rather than published in the public docs, so none are
+    reproduced here (no fabrication).

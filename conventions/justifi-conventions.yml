@@ -1,0 +1,47 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.justifi.tech/gettingStarted
+docs: https://docs.justifi.tech/gettingStarted
+authentication:
+  style: OAuth 2.0 client-credentials -> Bearer access token (24h TTL)
+  ref: authentication/justifi-authentication.yml
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  scope: POST /payments and other money-moving transactions
+  value: any unique string (a generated UUID is recommended)
+  purpose: >-
+    Guarantees payments and other important transactions are only ever processed
+    a single time when a request is retried.
+pagination:
+  style: cursor
+  params: [limit, before_cursor, after_cursor]
+  response_field: page_info
+  page_info_fields: [has_previous, has_next, start_cursor, end_cursor]
+  applies_to: all top-level array (list) API methods
+multi_tenancy:
+  header: Sub-Account
+  description: Platforms scope a request to a specific sub account (merchant) via the Sub-Account header.
+envelope:
+  description: >-
+    Responses are wrapped in an envelope with id, type, and data (single) or
+    id, type, data (array) plus page_info for lists.
+  single_fields: [id, type, data]
+  list_fields: [id, type, data, page_info]
+error_envelope:
+  description: >-
+    Errors return an error object with a code and message; payment failures add
+    decline_code and card-network detail.
+  fields: [error.code, error.message, error.decline_code, error.network, error.network_error_category, error.network_error_code]
+  ref: errors/justifi-problem-types.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.justifi.ai/v1
+  ref: lifecycle/justifi-lifecycle.yml
+async_processing:
+  note: >-
+    Fees are computed asynchronously - the Create Payment response returns an
+    empty fees array; subscribe to payment webhook events (recommended) or poll
+    Get Payment to receive populated fee objects.
+  ref: asyncapi/justifi-webhooks.yml

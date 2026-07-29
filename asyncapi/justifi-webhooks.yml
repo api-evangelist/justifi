@@ -1,0 +1,55 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/justifi-openapi-original.yml (x-webhooks)
+spec_type: Webhooks
+note: >-
+  JustiFi publishes no standalone AsyncAPI document; the event surface is
+  declared as x-webhooks in the OpenAPI. Events are delivered to subscriber
+  endpoints and carry the same enveloped resource payloads as the REST API.
+delivery:
+  mechanism: webhook (HTTP POST to subscriber URL)
+  docs: https://docs.justifi.tech/
+  envelope: { id, type, data }
+events:
+  - key: payments
+    operation: paymentEvent
+    resource: payment
+  - key: payment_methods
+    operation: paymentMethodEvent
+    resource: payment_method
+  - key: refunds
+    operation: refundEvent
+    resource: refund
+  - key: disputes
+    operation: disputeEvent
+    resource: dispute
+  - key: dispute_evidence
+    operation: disputeEvidenceEvent
+    resource: dispute_evidence
+  - key: payouts
+    operation: payoutEvent
+    resource: payout
+  - key: sub_accounts
+    operation: subAccountEvent
+    resource: sub_account
+  - key: application_fee_rates
+    operation: applicationFeeRateEvent
+    resource: application_fee_rate
+  - key: checkouts
+    operation: checkoutEvent
+    resource: checkout
+  - key: checkout_completions
+    operation: checkoutCompletionEvent
+    resource: checkout_completion
+  - key: payment_setting_updated
+    operation: accountPaymentSettingUpdatedEvent
+    resource: payment_setting
+  - key: payout_setting_updated
+    operation: accountPayoutSettingUpdatedEvent
+    resource: payout_setting
+  - key: terminal_orders
+    operation: terminalOrderEvent
+    resource: terminal_order
+  - key: reports
+    operation: reportEvent
+    resource: report

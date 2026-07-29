@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/justifi-openapi-original.yml
+format: json
+note: >-
+  JustiFi does not use RFC 9457 problem+json; errors are returned as a JSON
+  object with an error.code and error.message (payment failures add decline_code
+  and card-network fields). Status codes observed in the spec: 200, 201, 204,
+  400, 402.
+envelope:
+  content_type: application/json
+  shape:
+    error:
+      code: machine-readable error code string
+      message: human-readable description
+      decline_code: present on payment failures
+      network: card network (payment failures)
+      network_error_category: card-network category code
+      network_error_code: card-network error code
+problems:
+  - status: 400
+    code: full_pan_not_allowed
+    title: Full card number submitted without PCI approval
+    message: >-
+      Full card numbers are not accepted on this endpoint. Please use the
+      tokenization iframe to create a payment method token first.
+    source_operation: openapi/justifi-openapi-original.yml#CreatePayment
+  - status: 402
+    code: card_declined
+    title: Card payment declined
+    message: This card has been rejected. Please try a different card or payment method.
+    decline_code: do_not_retry
+    source_operation: openapi/justifi-openapi-original.yml#CreatePayment
+    see: errors/justifi-decline-codes.yml

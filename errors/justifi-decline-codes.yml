@@ -1,0 +1,29 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/justifi-openapi-original.yml
+note: >-
+  Card payment failures return HTTP 402 with an error envelope carrying code,
+  decline_code, and card-network detail. The values below are the ones the
+  published OpenAPI documents by example; JustiFi's full decline-code table is
+  merchant/dashboard-scoped and not published in the public spec, so only
+  spec-documented codes are captured here (no fabrication).
+envelope_field: error.decline_code
+http_status: 402
+network_fields: [error.network, error.network_error_category, error.network_error_code]
+decline_codes:
+  - code: card_declined
+    field: error.code
+    meaning: The card was rejected by the issuer/network.
+    action: Ask the buyer to try a different card or payment method.
+    masked_to_buyer: true
+  - code: do_not_retry
+    field: error.decline_code
+    meaning: The issuer/network indicated the transaction should not be retried.
+    action: Do not automatically retry; request an alternate payment method.
+    masked_to_buyer: true
+  - code: full_pan_not_allowed
+    field: error.code
+    http_status: 400
+    meaning: A raw card number was submitted to an endpoint that requires a tokenized payment method.
+    action: Tokenize the card with the JustiFi web component / iframe first, then retry.
+    masked_to_buyer: false

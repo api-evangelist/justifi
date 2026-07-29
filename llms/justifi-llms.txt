@@ -1,0 +1,32 @@
+# JustiFi
+
+> JustiFi is an embedded-payments / PayFac-as-a-service platform for SaaS companies. Its REST API (base https://api.justifi.ai/v1) and StencilJS web components let platforms onboard sub-merchants, tokenize cards and bank accounts, process payments, manage payouts, proceeds, disputes, checkouts, and card-present terminals — with PCI-DSS Level 1 and SOC 2 compliance handled by JustiFi.
+
+## APIs
+- [JustiFi API (v1)](https://docs.justifi.tech/api-spec): 90 operations across payments, payment methods, refunds, disputes, payouts, sub accounts, checkouts, terminals, reporting. OAuth 2.0 client-credentials -> Bearer.
+
+## Specs
+- [OpenAPI 3.0 (original)](openapi/justifi-openapi-original.yml)
+- [OpenAPI Overlay (AE enhancements)](overlays/justifi-openapi-overlay.yaml)
+- [Webhook event catalog](asyncapi/justifi-webhooks.yml)
+- [Data model / ERD](data-model/justifi-data-model.yml)
+
+## Auth & Conventions
+- [Authentication profile](authentication/justifi-authentication.yml): OAuth 2.0 client-credentials, 24h Bearer tokens, Sub-Account header.
+- [API conventions](conventions/justifi-conventions.yml): Idempotency-Key header, cursor pagination, response envelope.
+- [Error catalog](errors/justifi-problem-types.yml) and [decline codes](errors/justifi-decline-codes.yml)
+- [Lifecycle](lifecycle/justifi-lifecycle.yml): uri-path v1, status https://status.justifi.ai
+
+## SDKs & Tools
+- [Packages / SDKs](packages/justifi-packages.yml): Node, Ruby, Go, React Native, web components.
+- [CLI](cli/justifi-cli.yml)
+- [Embedded UI components](components/justifi-components.yml): https://storybook.justifi.ai/
+- [Agent skills](skills/_index.yml)
+
+## Docs
+- [Developer portal](https://developer.justifi.ai/)
+- [Documentation](https://docs.justifi.tech/)
+- [Getting started](https://docs.justifi.tech/gettingStarted)
+- [GitHub org](https://github.com/justifi-tech)
+- [Status](https://status.justifi.ai)
+- [Security & compliance](https://justifi.ai/security)

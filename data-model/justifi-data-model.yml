@@ -1,0 +1,100 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/justifi-openapi-original.yml
+note: >-
+  Entity graph derived from OpenAPI resource paths, id-reference query
+  parameters (sub_account_id, business_id, payout_id, payment_method_id,
+  source_payment_id, terminal_id, terminal_order_id) and schema $refs.
+entities:
+  - name: sub_account
+    id_prefix: acc_
+    description: A platform's merchant / sub account.
+  - name: payment
+    id_prefix: py_
+    description: A payment (charge) against a payment method.
+  - name: payment_method
+    id_prefix: pm_
+    description: Tokenized card or bank account.
+  - name: payment_method_group
+    description: Group of payment methods.
+  - name: refund
+    id_prefix: re_
+  - name: dispute
+  - name: payout
+    id_prefix: po_
+  - name: payout_hold
+  - name: balance_transaction
+  - name: proceed
+  - name: fee_configuration
+  - name: business
+  - name: identity
+  - name: address
+  - name: document
+  - name: bank_account
+  - name: checkout
+  - name: terminal
+  - name: terminal_order
+  - name: report
+  - name: dispute_evidence
+relationships:
+  - from: payment
+    to: payment_method
+    kind: belongs_to
+    via: payment_method
+  - from: payment
+    to: sub_account
+    kind: belongs_to
+    via: sub_account_id
+  - from: payment
+    to: refund
+    kind: has_many
+    via: payment_id
+  - from: payment
+    to: dispute
+    kind: has_many
+  - from: payment
+    to: balance_transaction
+    kind: has_many
+    via: payment_balance_transactions
+  - from: refund
+    to: payment
+    kind: belongs_to
+    via: source_payment_id
+  - from: payout
+    to: sub_account
+    kind: belongs_to
+    via: sub_account_id
+  - from: payout
+    to: balance_transaction
+    kind: has_many
+  - from: payout_hold
+    to: payout
+    kind: belongs_to
+    via: payout_id
+  - from: fee_configuration
+    to: sub_account
+    kind: belongs_to
+    via: sub_account_id
+  - from: payment_method_group
+    to: payment_method
+    kind: has_many
+    via: payment_method_id
+  - from: business
+    to: identity
+    kind: has_many
+  - from: business
+    to: address
+    kind: has_many
+  - from: business
+    to: bank_account
+    kind: has_many
+  - from: business
+    to: document
+    kind: has_many
+  - from: terminal_order
+    to: terminal
+    kind: has_many
+    via: terminal_order_id
+  - from: checkout
+    to: payment
+    kind: has_one
