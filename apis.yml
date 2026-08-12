@@ -969,6 +969,8 @@ apis:
   - type: DataModel
     url: data-model/justifi-data-model.yml
 common:
+- type: Overlay
+  url: overlays/justifi-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://developer.justifi.ai/
 - type: Documentation
