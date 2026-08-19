@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Bank Account API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Bank Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Bank Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/bank_accounts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "business_id",
+                "value": "biz_xyz",
+                "type": "query",
+                "description": "filter bank accounts which are associated with a business"
+              }
+            ]
+          },
+          "docs": "List the bank accounts you have created for a business. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Create a Bank Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/entities/bank_accounts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a bank account\n"
+        },
+        {
+          "info": {
+            "name": "Get a Bank Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/bank_accounts/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get details about a bank account"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

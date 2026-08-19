@@ -1,0 +1,217 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Fee Configurations API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Fee Configurations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Fee Configurations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/fee_configurations",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of resources to retrieve"
+              },
+              {
+                "name": "after_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the next page of a list"
+              },
+              {
+                "name": "before_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the previous page of a list"
+              }
+            ]
+          },
+          "docs": "List all active Standard Fee Configurations for a sub account. Returns configurations where the current time is between `effective_start` and `effective_end` (or `effective_end` is null).\n\nThis endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n"
+        },
+        {
+          "info": {
+            "name": "List Scheduled Fee Configurations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/fee_configurations/scheduled",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of resources to retrieve"
+              },
+              {
+                "name": "after_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the next page of a list"
+              },
+              {
+                "name": "before_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the previous page of a list"
+              }
+            ]
+          },
+          "docs": "List Standard Fee Configurations with a future `effective_start` that haven't taken effect yet.\n\nThis endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n"
+        },
+        {
+          "info": {
+            "name": "Get a Fee Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/fee_configurations/:fee_type",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fee_type",
+                "value": "",
+                "type": "path",
+                "description": "the fee type to retrieve"
+              }
+            ]
+          },
+          "docs": "Get the active Standard Fee Configuration for a specific fee type on a sub account. Returns 404 if no active configuration exists for that fee type.\n"
+        },
+        {
+          "info": {
+            "name": "Create a Fee Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/fee_configurations/:fee_type",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fee_type",
+                "value": "",
+                "type": "path",
+                "description": "the fee type to configure"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a Standard Fee Configuration for a specific fee type on a sub account.\n\nIf an active configuration already exists for the same fee type, it is automatically retired — its `effective_end` is set to the new configuration's `effective_start`.\n\nThere is no update or delete operation. To change a fee rate, create a new configuration for the same fee type.\n"
+        },
+        {
+          "info": {
+            "name": "Get Fee Configuration History",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/fee_configurations/:fee_type/history",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fee_type",
+                "value": "",
+                "type": "path",
+                "description": "the fee type to retrieve history for"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of resources to retrieve"
+              },
+              {
+                "name": "after_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the next page of a list"
+              },
+              {
+                "name": "before_cursor",
+                "value": "",
+                "type": "query",
+                "description": "token to fetch the previous page of a list"
+              }
+            ]
+          },
+          "docs": "List all Standard Fee Configurations for a specific fee type on a sub account, including active, retired, and scheduled configurations. Results are ordered by `effective_start` descending.\n\nThis endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

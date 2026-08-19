@@ -1,0 +1,38 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Web Component Tokens API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Web Component Tokens",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate A Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/web_component_tokens",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The web component token provides permission to render a web component on your frontend. \nTo get a web component token post your [access token](https://docs.justifi.tech/api-spec#tag/API-Credentials/operation/CreateAccessToken) in the header and the `business_id` or `account_id` as part of the `resources` array in the body.\nFor a list of resources needed for each web component please refer to [Roles need for each component](https://docs.justifi.tech/infrastructure/webComponentTokens#roles-need-fo"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

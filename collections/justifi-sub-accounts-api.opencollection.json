@@ -1,0 +1,141 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Sub Accounts API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sub Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Sub Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "status",
+                "value": "archived",
+                "type": "query",
+                "description": "Return accounts with specific status\n"
+              },
+              {
+                "name": "business_id",
+                "value": "biz_123abc",
+                "type": "query",
+                "description": "Filter accounts associated with a business record\n"
+              }
+            ]
+          },
+          "docs": "List the sub accounts for your platform. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n*Note: By default, all sub accounts which are not archived will be returned. To list archived sub accounts, use the optional status parameter set to `archived`*\n"
+        },
+        {
+          "info": {
+            "name": "Create a Sub Account (deprecated)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/sub_accounts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**We no longer allow new platforms to use this API. To onboard a customer so they can process payments use [Hosted Onboarding](https://docs.justifi.tech/api-spec#tag/Hosted-Onboarding) or [Onboarding via API](https://docs.justifi.tech/api-spec#tag/Onboarding-via-API) instead.\nDuring the onboarding process a sub account will automatically created for your customer.**\n\nCreate a JustiFi account for your customer, so they can process payments (once approved by JustiFi). The sub account will be creat"
+        },
+        {
+          "info": {
+            "name": "Get a Sub Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a sub account."
+        },
+        {
+          "info": {
+            "name": "Get a Payout Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/payout_account",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about the currently active payout bank account of a sub account."
+        },
+        {
+          "info": {
+            "name": "Get Sub Account Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/sub_accounts/:id/settings",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about sub account settings."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

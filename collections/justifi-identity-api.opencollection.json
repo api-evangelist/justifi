@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Identity API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Identity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Identities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/identity",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ]
+          },
+          "docs": "List identities for your platform. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n"
+        },
+        {
+          "info": {
+            "name": "Create an Identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/entities/identity",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an Identity\n"
+        },
+        {
+          "info": {
+            "name": "Get an Identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/identity/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about an Identity"
+        },
+        {
+          "info": {
+            "name": "Update an Identity",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/entities/identity/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update information about an Identity"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,115 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Business API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Businesses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/business",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "business_name",
+                "value": "\"Company Name\"",
+                "type": "query",
+                "description": "filter businesses by name"
+              }
+            ]
+          },
+          "docs": "List businesses for your platform. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination).\n"
+        },
+        {
+          "info": {
+            "name": "Create a Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/entities/business",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a Business\n"
+        },
+        {
+          "info": {
+            "name": "Get a Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/entities/business/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a Business"
+        },
+        {
+          "info": {
+            "name": "Update a Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/entities/business/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update information about a Business"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

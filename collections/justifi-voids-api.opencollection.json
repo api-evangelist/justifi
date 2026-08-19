@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Voids API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Voids",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Void a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments/:id/void",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Void a payment transaction to cancel a payment before it reaches settlement. \nPayment transactions are voidable within 25 minutes of the original transaction. \nThis includes `authorized` payments (that were created with `capture_strategy` manual and have not been captured yet).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

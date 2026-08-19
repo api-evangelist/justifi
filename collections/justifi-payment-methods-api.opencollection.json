@@ -1,0 +1,181 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Payment Methods API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Methods",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Payment Methods",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payment_methods",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "cust_123xyz",
+                "type": "query",
+                "description": "Note: customer_id is a deprecated field. Please use our payment method groups instead. filter records which are associated with a customer.\n"
+              },
+              {
+                "name": "payment_method_group_id",
+                "value": "pmg_123xyz",
+                "type": "query",
+                "description": "filter records which are associated with a payment method group.\n"
+              },
+              {
+                "name": "created_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "created_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              }
+            ]
+          },
+          "docs": "List the payment methods for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Create a Payment Method",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payment_methods",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**This endpoint requires prior approval.** New integrations should use the\n**[JustiFi Tokenize Payment Method Web Component](https://docs.justifi.tech/web-components/payment-facilitation/tokenize-payment-method)** \nto securely collect and tokenize payment method details.\n\nThe web component handles PCI-scoped data collection and returns a payment method token that you can pass to the\n[Create Payment](https://docs.justifi.tech/api-spec#tag/Payments/operation/CreatePayment) endpoint.\n\nIf you have a"
+        },
+        {
+          "info": {
+            "name": "Get a Payment Method",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payment_methods/:token",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a payment method.\n\n*Note: This is the primary endpoint recommended for retrieving bin_details related to a card payment method.\nbin_details are not guaranteed to be present on every card — availability depends on the card network and issuer.\nWhen unavailable, the bin_details field will be null.*\n"
+        },
+        {
+          "info": {
+            "name": "Update a Payment Method",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/payment_methods/:token",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change a payment method's expiration date, address, or metadata.\n"
+        },
+        {
+          "info": {
+            "name": "Clone a Payment Method",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payment_methods/:token/clone",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Copy a payment method from one sub account to another sub account. This allows one\nto share payment methods between accounts without having to collect the card information again.\nThe original payment method's id / token should be provided in the path.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

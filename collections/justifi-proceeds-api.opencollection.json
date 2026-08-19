@@ -1,0 +1,108 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Proceeds API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Proceeds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Proceeds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/proceeds",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "created_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "created_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "deposits_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which deposit before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "deposits_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              }
+            ]
+          },
+          "docs": "List the proceeds payouts for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Get a Proceeds Payout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/proceeds/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a proceeds payout."
+        },
+        {
+          "info": {
+            "name": "Get a Proceeds Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/reports/proceeds/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "[DEPRECATION WARNING] This endpoint will be deprecated, please use [Reports API](#tag/Reports)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

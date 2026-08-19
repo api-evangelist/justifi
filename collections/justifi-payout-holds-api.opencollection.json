@@ -1,0 +1,97 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Payout Holds API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payout Holds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Payout Holds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payout_holds",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "created_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "created_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "start_date_before",
+                "value": "2024-01-31",
+                "type": "query",
+                "description": "Filter by start date before the specified date (ISO 8601 format)"
+              },
+              {
+                "name": "start_date_after",
+                "value": "2024-01-01",
+                "type": "query",
+                "description": "Filter by start date after the specified date (ISO 8601 format)"
+              },
+              {
+                "name": "end_date_before",
+                "value": "2024-01-31",
+                "type": "query",
+                "description": "Filter by end date before the specified date (ISO 8601 format)"
+              },
+              {
+                "name": "end_date_after",
+                "value": "2024-01-01",
+                "type": "query",
+                "description": "Filter by end date after the specified date (ISO 8601 format)"
+              }
+            ]
+          },
+          "docs": "List the payout holds that belong to this account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Get a Payout Hold",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payout_holds/:payout_hold_id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "payout_hold_id",
+                "value": "poh_abc123xyz",
+                "type": "path",
+                "description": "Payout hold public ID with poh_ prefix"
+              }
+            ]
+          },
+          "docs": "Retrieve a specific payout hold by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

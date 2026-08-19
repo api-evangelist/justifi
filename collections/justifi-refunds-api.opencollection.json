@@ -1,0 +1,126 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Refunds API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Refunds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Refund a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments/:id/refunds",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issue a refund for a payment. You may refund the full payment amount or just a portion. When refunding a portion, multiple refunds are supported up until the full payment amount has been refunded.\n\n*Note: If the sub account status is not `enabled`, `400` will be returned.*\n"
+        },
+        {
+          "info": {
+            "name": "List Refunds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/refunds",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ]
+          },
+          "docs": "List the refunds for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Get a Refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/refunds/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a refund."
+        },
+        {
+          "info": {
+            "name": "Update a Refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/refunds/:id",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the refund metadata."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

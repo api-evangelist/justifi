@@ -1,0 +1,267 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Payments API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payments",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_method_id",
+                "value": "pm_123xyz",
+                "type": "query",
+                "description": "filter records which are associated with a payment method.\n"
+              },
+              {
+                "name": "void_id",
+                "value": "vo_123xyz",
+                "type": "query",
+                "description": "filter records which are associated with a void.\n"
+              },
+              {
+                "name": "created_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "created_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "payment_status",
+                "value": "refunded",
+                "type": "query",
+                "description": "filter to payments which have request payment_status\n"
+              }
+            ]
+          },
+          "docs": "List the payments for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Create a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authorize, capture, and charge a payment method. We limit concurrency to 10 concurrent requests per platform.\nThis is due to the nature of the payments API, to reduce rejections, and false positive fraud detection during bulk\npayment processing.\n\n**Payment methods must be tokenized before creating a payment.** Tokenize payment methods use the embedded\n**[JustiFi Tokenize Payment Method Web Component](https://docs.justifi.tech/web-components/payment-facilitation/tokenize-payment-method)** \nto sec"
+        },
+        {
+          "info": {
+            "name": "Get a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payments/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a payment."
+        },
+        {
+          "info": {
+            "name": "Update a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/payments/:id",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change a payment's description or metadata.\n"
+        },
+        {
+          "info": {
+            "name": "Capture a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments/:id/capture",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "To charge a payment method and capture a previously authorized payment.  Returns a `payment_already_captured` error if the payment is in a captured state.\nIf not captured an authorized payment will be canceled after 7 days.\n\n*Note: If the sub account status is not `enabled`, `400` will be returned.*\n"
+        },
+        {
+          "info": {
+            "name": "Refund a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments/:id/refunds",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issue a refund for a payment. You may refund the full payment amount or just a portion. When refunding a portion, multiple refunds are supported up until the full payment amount has been refunded.\n\n*Note: If the sub account status is not `enabled`, `400` will be returned.*\n"
+        },
+        {
+          "info": {
+            "name": "Void a Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payments/:id/void",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Void a payment transaction to cancel a payment before it reaches settlement. \nPayment transactions are voidable within 25 minutes of the original transaction. \nThis includes `authorized` payments (that were created with `capture_strategy` manual and have not been captured yet).\n"
+        },
+        {
+          "info": {
+            "name": "Get Payment Balance Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payments/:id/payment_balance_transactions",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about the payment-balance-transactions associated with a payment."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

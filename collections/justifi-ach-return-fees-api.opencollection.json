@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Ach Return Fees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an Ach Return Fee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/ach_return_fees/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about ach return fee."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

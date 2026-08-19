@@ -1,0 +1,76 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Balance Transactions API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Balance Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Balance Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/balance_transactions",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "payout_id",
+                "value": "po_123xyz",
+                "type": "query",
+                "description": "Filter records which are part of the payout with the specified id\n"
+              },
+              {
+                "name": "source_payment_id",
+                "value": "py_123xyz",
+                "type": "query",
+                "description": "Filter records which are associated with the payment with the specified id\n"
+              }
+            ]
+          },
+          "docs": "List the balance transactions for your account. This API is limited to a single sub account or payout. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Get a Balance Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/balance_transactions/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about a balance transaction."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

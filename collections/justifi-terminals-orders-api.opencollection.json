@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Terminals Orders API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Terminals Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Terminals Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/terminals/orders/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get information about terminals order"
+        },
+        {
+          "info": {
+            "name": "List Terminal Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/terminals/orders",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "created_before",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "created_after",
+                "value": "2022-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "order_type",
+                "value": "boarding_only",
+                "type": "query",
+                "description": "filter terminal orders of a specific type\n"
+              },
+              {
+                "name": "order_status",
+                "value": "created",
+                "type": "query",
+                "description": "filter terminal orders of a specific status\n"
+              },
+              {
+                "name": "sub_account_id",
+                "value": "acc_123xyz",
+                "type": "query",
+                "description": "filter terminal orders of a specific sub account\n"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of terminal orders for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Order Terminals",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/terminals/orders",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Order (one or multiple) terminals from one of our technology partners"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

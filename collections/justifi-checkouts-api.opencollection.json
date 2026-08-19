@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Checkouts API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Checkouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Checkouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/checkouts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "payment_mode",
+                "value": "bnpl",
+                "type": "query",
+                "description": "the mode in which the checkout was completed\n"
+              },
+              {
+                "name": "status",
+                "value": "completed",
+                "type": "query",
+                "description": "the checkout status\n"
+              },
+              {
+                "name": "payment_status",
+                "value": "succeeded",
+                "type": "query",
+                "description": "the status of the payment which was use to complete the checkout\n"
+              }
+            ]
+          },
+          "docs": "List Checkouts for your account. This endpoint supports [pagination](https://docs.justifi.tech/api-spec#section/Pagination)."
+        },
+        {
+          "info": {
+            "name": "Create a Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/checkouts",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a checkout to initiate the collection of a Card Payment, ACH Payment, Insurance Quote Payment, BNPL Payment (not yet available via API),\nor Card Reader payment in a single flow. Checkouts have the following statuses: `created` after creating a checkout, `attempted` when a checkout\npayment is attempted, `completed` when a payment is collected for a checkout, `expired` when a checkout has not been completed after one week\nsince being created\n"
+        },
+        {
+          "info": {
+            "name": "Get Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/checkouts/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ]
+          },
+          "docs": "Get information about a checkout"
+        },
+        {
+          "info": {
+            "name": "Update a Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/checkouts/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change a checkout's amount or description"
+        },
+        {
+          "info": {
+            "name": "Complete a Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/checkouts/:id/complete",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use to complete a checkout and capture a payment, requires an idempotency key for payment processing\n"
+        },
+        {
+          "info": {
+            "name": "Refund a Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/checkouts/:id/refunds",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": "my-request-123abc"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use to refund a checkout. You may refund the full amount or just a portion. When refunding a portion, multiple refunds are supported up until the full payment amount has been refunded.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,153 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Payment Method Groups API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Method Groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Payment Method Groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payment_method_groups",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ]
+          },
+          "docs": "List payment method groups associated to an account\n"
+        },
+        {
+          "info": {
+            "name": "Create a Payment Method Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/payment_method_groups",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ]
+          },
+          "docs": "You can create payment methods groups ahead of time, then associate payment methods and easily filter them.\n"
+        },
+        {
+          "info": {
+            "name": "Get a Payment Method Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/payment_method_groups/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get payment method group associated to an account\n"
+        },
+        {
+          "info": {
+            "name": "Update a Payment Method Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/payment_method_groups/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a payment method group to associate payment methods\n"
+        },
+        {
+          "info": {
+            "name": "Remove a Payment Method from a Payment Method Group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.justifi.ai/v1/payment_method_groups/:id/payment_methods/:payment_method_id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "payment_method_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the payment method to remove"
+              }
+            ]
+          },
+          "docs": "Removes a payment method from a payment method group\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

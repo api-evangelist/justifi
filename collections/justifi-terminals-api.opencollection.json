@@ -1,0 +1,203 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustiFi API Documentation Ach Return Fees Terminals API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Terminals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Pay via Terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/terminals/pay",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a checkout to be processed via terminal, listen for checkout events (recommended) or poll checkout API for payment outcome"
+        },
+        {
+          "info": {
+            "name": "List Terminals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/terminals",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              },
+              {
+                "name": "Sub-Account",
+                "value": "acc_123xyz"
+              }
+            ],
+            "params": [
+              {
+                "name": "status",
+                "value": "active",
+                "type": "query",
+                "description": "filter records by the terminal status. Accepts multiple comma separated status values.\n"
+              },
+              {
+                "name": "terminal_id",
+                "value": "trm_abc123",
+                "type": "query",
+                "description": "filter records by terminal id\n"
+              },
+              {
+                "name": "provider_id",
+                "value": "23456789",
+                "type": "query",
+                "description": "filter records by provider id, also called device id (DID). Accepts multiple comma separated provider ids.\n"
+              },
+              {
+                "name": "terminal_order_id",
+                "value": "tord_123xyz",
+                "type": "query",
+                "description": "filter records by terminal order id\n"
+              },
+              {
+                "name": "verified_after",
+                "value": "2024-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were verified after the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "verified_before",
+                "value": "2024-01-01T00:00:00Z",
+                "type": "query",
+                "description": "filter records which were verified before the date and time (UTC) specified. Dates without time specified will default to 00:00:00\n"
+              },
+              {
+                "name": "verified_on",
+                "value": "2024-01-01",
+                "type": "query",
+                "description": "filter records which were verified on the date specified between 00:00:00 and 23:59:59 (UTC)\n"
+              }
+            ]
+          },
+          "docs": "List Terminals"
+        },
+        {
+          "info": {
+            "name": "Get a Terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/terminals/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a Terminal"
+        },
+        {
+          "info": {
+            "name": "Update a Terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.justifi.ai/v1/terminals/:id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Terminal"
+        },
+        {
+          "info": {
+            "name": "Get Terminal Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justifi.ai/v1/terminals/:id/status",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get Terminal Status"
+        },
+        {
+          "info": {
+            "name": "Identify Terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.justifi.ai/v1/terminals/:id/identify",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {access_token}"
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This API will attempt to display the nickname or serial number on\nthe screen of the given terminal for 20 seconds.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

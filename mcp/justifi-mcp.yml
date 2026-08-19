@@ -2,56 +2,60 @@ generated: '2026-07-19'
 method: derived
 source: openapi/justifi-openapi-original.yml
 status: candidate
-note: >-
-  No official hosted JustiFi MCP server was located at enrichment time. This is
-  a candidate tool surface derived one-to-one from OpenAPI operations to seed a
-  future MCP server; not published by JustiFi.
+note: No official hosted JustiFi MCP server was located at enrichment time. This is a candidate tool surface
+  derived one-to-one from OpenAPI operations to seed a future MCP server; not published by JustiFi.
 server:
   name: justifi
   transport: http
 tools:
-  - name: create_payment
-    description: Create a payment (charge) against a tokenized payment method.
-    source_operation: openapi/justifi-openapi-original.yml#CreatePayment
-  - name: list_payments
-    description: List payments.
-    source_operation: openapi/justifi-openapi-original.yml#ListPayments
-  - name: get_payment
-    description: Retrieve a payment by id.
-    source_operation: openapi/justifi-openapi-original.yml#GetPayment
-  - name: capture_payment
-    description: Capture a previously authorized payment.
-    source_operation: openapi/justifi-openapi-original.yml#CapturePayment
-  - name: refund_payment
-    description: Refund a payment with selective fee return.
-    source_operation: openapi/justifi-openapi-original.yml#CreateRefund
-  - name: void_payment
-    description: Void an uncaptured payment.
-    source_operation: openapi/justifi-openapi-original.yml#VoidPayment
-  - name: create_payment_method
-    description: Tokenize and create a payment method.
-    source_operation: openapi/justifi-openapi-original.yml#CreatePaymentMethod
-  - name: list_payouts
-    description: List payouts.
-    source_operation: openapi/justifi-openapi-original.yml#ListPayouts
-  - name: get_payout
-    description: Retrieve a payout by id.
-    source_operation: openapi/justifi-openapi-original.yml#GetPayout
-  - name: list_disputes
-    description: List disputes.
-    source_operation: openapi/justifi-openapi-original.yml#ListDisputes
-  - name: create_sub_account
-    description: Create a platform sub account (merchant).
-    source_operation: openapi/justifi-openapi-original.yml#CreateSubAccount
-  - name: list_sub_accounts
-    description: List sub accounts.
-    source_operation: openapi/justifi-openapi-original.yml#ListSubAccounts
-  - name: create_checkout
-    description: Create a checkout.
-    source_operation: openapi/justifi-openapi-original.yml#CreateCheckout
-  - name: list_balance_transactions
-    description: List balance transactions.
-    source_operation: openapi/justifi-openapi-original.yml#ListBalanceTransactions
-  - name: create_web_component_token
-    description: Mint a scoped token for JustiFi web components.
-    source_operation: openapi/justifi-openapi-original.yml#CreateWebComponentToken
+- name: create_payment
+  description: Create a payment (charge) against a tokenized payment method.
+  source_operation: openapi/justifi-openapi-original.yml#CreatePayment
+- name: list_payments
+  description: List payments.
+  source_operation: openapi/justifi-openapi-original.yml#ListPayments
+- name: get_payment
+  description: Retrieve a payment by id.
+  source_operation: openapi/justifi-openapi-original.yml#GetPayment
+- name: capture_payment
+  description: Capture a previously authorized payment.
+  source_operation: openapi/justifi-openapi-original.yml#CapturePayment
+- name: refund_payment
+  description: Refund a payment with selective fee return.
+  source_operation: openapi/justifi-openapi-original.yml#CreateRefund
+- name: void_payment
+  description: Void an uncaptured payment.
+  source_operation: openapi/justifi-openapi-original.yml#VoidPayment
+- name: create_payment_method
+  description: Tokenize and create a payment method.
+  source_operation: openapi/justifi-openapi-original.yml#CreatePaymentMethod
+- name: list_payouts
+  description: List payouts.
+  source_operation: openapi/justifi-openapi-original.yml#ListPayouts
+- name: get_payout
+  description: Retrieve a payout by id.
+  source_operation: openapi/justifi-openapi-original.yml#GetPayout
+- name: list_disputes
+  description: List disputes.
+  source_operation: openapi/justifi-openapi-original.yml#ListDisputes
+- name: create_sub_account
+  description: Create a platform sub account (merchant).
+  source_operation: openapi/justifi-openapi-original.yml#CreateSubAccount
+- name: list_sub_accounts
+  description: List sub accounts.
+  source_operation: openapi/justifi-openapi-original.yml#ListSubAccounts
+- name: create_checkout
+  description: Create a checkout.
+  source_operation: openapi/justifi-openapi-original.yml#CreateCheckout
+- name: list_balance_transactions
+  description: List balance transactions.
+  source_operation: openapi/justifi-openapi-original.yml#ListBalanceTransactions
+- name: create_web_component_token
+  description: Mint a scoped token for JustiFi web components.
+  source_operation: openapi/justifi-openapi-original.yml#CreateWebComponentToken
+deployment:
+  mode: none
+  verified: derived
+  tools: 15
+  checked: '2026-08-12'
+  source: catalog MCP census
