@@ -40,6 +40,14 @@ tags:
 - Payment Facilitation
 - Payouts
 - Developers
+tags_raw:
+- Company
+- Fintech
+- Payments
+- Embedded Payments
+- Payment Facilitation
+- Payouts
+- Developers
 - API
 maintainers:
 - FN: Kin Lane
@@ -794,6 +802,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Subaccounts
+  tags_raw:
   - Sub Accounts
   properties:
   - type: OpenAPI
@@ -914,6 +924,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Terms And Conditions
+  tags_raw:
   - Terms and Conditions
   properties:
   - type: OpenAPI
