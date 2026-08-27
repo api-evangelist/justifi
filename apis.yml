@@ -980,6 +980,16 @@ apis:
     url: errors/justifi-decline-codes.yml
   - type: DataModel
     url: data-model/justifi-data-model.yml
+- aid: justifi:justifi-events-api
+  name: JustiFi Events API
+  description: The Events API from JustiFi — 0 operation(s) for events.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-events-api-openapi.yml
 common:
 - type: Overlay
   url: overlays/justifi-openapi-overlay.yaml
