@@ -814,7 +814,7 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
-  - Subaccounts
+  - Sub Accounts
   tags_raw:
   - Sub Accounts
   properties:
@@ -936,7 +936,7 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
-  - Terms And Conditions
+  - Terms and Conditions
   tags_raw:
   - Terms and Conditions
   properties:
@@ -998,6 +998,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
