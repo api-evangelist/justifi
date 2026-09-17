@@ -772,64 +772,6 @@ apis:
     url: errors/justifi-decline-codes.yml
   - type: DataModel
     url: data-model/justifi-data-model.yml
-- aid: justifi:justifi-sub-accounts-api
-  name: JustiFi Sub Accounts API
-  description: >-
-    Sub Accounts are the representation of your platform's customers for payment processing in JustiFi
-    and are associated with your platform account.
-
-    To gain approval for payment processing each of your customers need to be onboarded as a business
-    via [web compoenent](https://docs.justifi.tech/api-spec#tag/Onboarding-via-Component), [hosted onboarding](https://docs.justifi.tech/api-spec#tag/Hosted-Onboarding)
-    or [API](https://docs.justifi.tech/api-spec#tag/Onboarding-via-API).
-
-    During the onboarding process a sub account is automatically created for each business and updated
-    along the way.
-
-    Payments can be processed through a sub account once it's status is `enabled`.
-
-    | Status             | Description |
-
-    | -----------        | ----------- |
-
-    | created            | this sub account has been created (via Sub Accounts API), but we haven't received
-    their onboarding entry yet |
-
-    | submitted          | we've received this sub account's onboarding entry (via hosted onboarding or
-    API) and we're reviewing their information |
-
-    | information_needed | we reviewed this sub account's onboarding entry and found an issue; we need
-    more information before we can enable this account |
-
-    | enabled            | this sub account is approved to process payments _note: test accounts are automatically
-    enabled_ |
-
-    | rejected           | this sub account didn't pass approval, so they won't be able to process payments
-    |
-
-    | disabled           | this sub account was previously approved, but has since become ineligible to
-    process payments (e.g. due to fraud) |
-
-    | archived           | this sub account has been archived; they won't be able to process payments
-    (but their record will remain for historical reasons) |
-  humanURL: https://docs.justifi.tech/api-spec
-  baseURL: https://api.justifi.ai/v1
-  tags:
-  - Subaccounts
-  tags_raw:
-  - Sub Accounts
-  properties:
-  - type: OpenAPI
-    url: openapi/justifi-sub-accounts-api-openapi.yml
-  - type: Webhooks
-    url: asyncapi/justifi-webhooks.yml
-  - type: Authentication
-    url: authentication/justifi-authentication.yml
-  - type: ErrorCatalog
-    url: errors/justifi-problem-types.yml
-  - type: DeclineCodes
-    url: errors/justifi-decline-codes.yml
-  - type: DataModel
-    url: data-model/justifi-data-model.yml
 - aid: justifi:justifi-terminals-api
   name: JustiFi Terminals API
   description: >-
@@ -1004,6 +946,28 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/justifi-events-api-openapi.yml
+- aid: justifi:justifi-subaccounts-api
+  name: JustiFi Subaccounts API
+  description: >-
+    Sub Accounts are the representation of your platform's customers for payment processing in JustiFi
+    and are associated with your platform account.
+  humanURL: https://docs.justifi.tech/api-spec
+  baseURL: https://api.justifi.ai/v1
+  tags:
+  - Subaccounts
+  properties:
+  - type: OpenAPI
+    url: openapi/justifi-subaccounts-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/justifi-webhooks.yml
+  - type: Authentication
+    url: authentication/justifi-authentication.yml
+  - type: ErrorCatalog
+    url: errors/justifi-problem-types.yml
+  - type: DeclineCodes
+    url: errors/justifi-decline-codes.yml
+  - type: DataModel
+    url: data-model/justifi-data-model.yml
 common:
 - type: CapabilityMap
   url: capabilities/justifi-capability-edges.yml
