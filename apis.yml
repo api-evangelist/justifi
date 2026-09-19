@@ -301,6 +301,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Checkout
+  tags_raw:
   - Checkouts
   properties:
   - type: OpenAPI
@@ -358,6 +360,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Documents
+  tags_raw:
   - Document
   properties:
   - type: OpenAPI
@@ -836,6 +840,8 @@ apis:
   humanURL: https://docs.justifi.tech/api-spec
   baseURL: https://api.justifi.ai/v1
   tags:
+  - Terminal
+  tags_raw:
   - Terminals
   properties:
   - type: OpenAPI
