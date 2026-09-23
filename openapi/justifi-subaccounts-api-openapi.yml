@@ -1,0 +1,509 @@
+openapi: 3.2.0
+info:
+  description: '## Introduction
+
+
+    The JustiFi API is a REST-based payment processing API.'
+  title: JustiFi API Documentation Sub Accounts API
+  termsOfService: https://justifi.ai/terms-and-conditions
+  x-logo:
+    url: https://justifi-brand-assets.s3.us-east-2.amazonaws.com/justifi-light-bg.png
+  contact:
+    email: api-development@justifi.ai
+servers:
+- url: https://api.justifi.ai/v1
+  description: JustiFi API
+tags:
+- name: Subaccounts
+  description: Sub Accounts are the representation of your platform's customers for payment processing in JustiFi and are associated with your platform account.
+paths:
+  /sub_accounts:
+    post:
+      summary: Create a Sub Account (deprecated)
+      description: '**We no longer allow new platforms to use this API. To onboard a customer so they can process payments use Hosted Onboarding or Onboarding via API instead.
+
+        During the onboarding process a sub account will automatically created for your customer.**
+
+
+        Create a JustiFi account for your customer, so they can process payments (once approved by JustiFi). The sub account will be created as part of your platform. If you use your test credentials, the sub account you create will have one account with the `account_type` of `test`. If you use your live credentials, the sub account you create will have two accounts -- one with the `account_type` of `test` and another with the `account_type` of `live`. This allows you to perform test operations on your real accounts by using their `test` account. When viewing the data payload for any sub account, you can reference the `related_accounts` attribute to get the `test_account_id` and `live_account_id` (if present) for that sub account.'
+      operationId: CreateSubAccount
+      tags:
+      - Subaccounts
+      parameters:
+      - $ref: '#/components/parameters/authorization-header'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: Sub account name
+                  description: 'name for the sub account
+
+                    *note: the name must be unique in your platform*
+
+                    '
+              required:
+              - name
+      responses:
+        '201':
+          description: Sub account was created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - properties:
+                    type:
+                      example: sub_account
+                    data:
+                      $ref: '#/components/schemas/SubAccount'
+    get:
+      summary: List Sub Accounts
+      description: 'List the sub accounts for your platform. This endpoint supports pagination.
+
+        *Note: By default, all sub accounts which are not archived will be returned. To list archived sub accounts, use the optional status parameter set to `archived`*'
+      operationId: ListSubAccounts
+      tags:
+      - Subaccounts
+      parameters:
+      - $ref: '#/components/parameters/authorization-header'
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - created
+          - submitted
+          - information_needed
+          - rejected
+          - enabled
+          - disabled
+          - archived
+        required: false
+        example: archived
+        description: 'Return accounts with specific status
+
+          '
+      - in: query
+        name: business_id
+        schema:
+          type: string
+        required: false
+        example: biz_123abc
+        description: 'Filter accounts associated with a business record
+
+          '
+      responses:
+        '200':
+          description: Successfully list sub accounts
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope-list'
+                - properties:
+                    type:
+                      example: array
+                    data:
+                      items:
+                        $ref: '#/components/schemas/SubAccount'
+  /sub_accounts/{id}:
+    get:
+      summary: Get a Sub Account
+      description: Get information about a sub account.
+      operationId: GetSubAccount
+      tags:
+      - Subaccounts
+      parameters:
+      - $ref: '#/components/parameters/id-path'
+      - $ref: '#/components/parameters/authorization-header'
+      responses:
+        '200':
+          description: Successfully get a sub account
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - properties:
+                    type:
+                      example: sub_account
+                    data:
+                      $ref: '#/components/schemas/SubAccount'
+  /sub_accounts/{id}/payout_account:
+    get:
+      summary: Get a Payout Account
+      description: Get information about the currently active payout bank account of a sub account.
+      operationId: GetPayoutAccount
+      tags:
+      - Subaccounts
+      parameters:
+      - $ref: '#/components/parameters/id-path'
+      - $ref: '#/components/parameters/authorization-header'
+      responses:
+        '200':
+          description: Successfully get the active payout bank account a sub account
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - properties:
+                    type:
+                      example: payout_bank_account
+                    data:
+                      $ref: '#/components/schemas/PayoutBankAccount'
+  /sub_accounts/{id}/settings:
+    get:
+      summary: Get Sub Account Settings
+      description: Get information about sub account settings.
+      operationId: GetSubAccountSettings
+      tags:
+      - Subaccounts
+      parameters:
+      - $ref: '#/components/parameters/id-path'
+      - $ref: '#/components/parameters/authorization-header'
+      responses:
+        '200':
+          description: Successfully get sub account settings
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - properties:
+                    type:
+                      example: sub_account_settings
+                    data:
+                      $ref: '#/components/schemas/SubAccountSettings'
+components:
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    SubAccountSettings:
+      type: object
+      properties:
+        payments:
+          type: object
+          properties:
+            id:
+              description: unique payment settings id
+              type: string
+              example: stpy_7KRQzIYhUGxNscgLJP0Aum
+            account_id:
+              type: string
+              description: unique sub account id this setting is applied to
+              example: acc_123xyz
+            mcc_code:
+              description: merchant category code configured
+              type: string
+              example: '5045'
+            credit_card_payments:
+              description: credit card payments enabled for processing
+              type: boolean
+              example: true
+            ach_payments:
+              description: ach payments enabled for processing
+              type: boolean
+              example: true
+            card_present:
+              description: card present feature enabled for processing
+              type: boolean
+              example: false
+            bnpl_payments:
+              description: buy now pay later feature enabled
+              type: boolean
+              example: false
+            apple_payments:
+              description: apple payments feature enabled
+              type: boolean
+              example: false
+            google_payments:
+              description: google payments feature enabled
+              type: boolean
+              example: false
+            bank_account_verification:
+              description: bank account verification feature enabled
+              type: boolean
+              example: false
+            insurance_payments:
+              description: insurance feature enabled
+              type: boolean
+              example: false
+            platform_wallet_account:
+              description: platform_wallet_account feature enabled
+              type: boolean
+              example: false
+        payouts:
+          type: object
+          properties:
+            id:
+              description: unique payout settings id
+              type: string
+              example: stpo_1FrQmV9ByJEKjpKf5diaA4
+            enabled:
+              description: payouts enabled for the sub account
+              type: boolean
+              example: true
+            statement_descriptor:
+              description: statement descriptor for the payout
+              type: string
+              example: JustiFi
+            settlement_priority:
+              description: null
+              type: enum[standard expedited]
+              example: standard
+    PayoutBankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account id
+          type: string
+          format: uuid
+        full_name:
+          description: account holder's full name
+          type: string
+        bank_name:
+          description: name of bank
+          type: string
+        account_number_last4:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        routing_number:
+          type: string
+        country:
+          type: string
+          enum:
+          - US
+          - CA
+          example: US
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        nickname:
+          type: string
+        account_type:
+          type: string
+          enum:
+          - checking
+    SubAccount:
+      type: object
+      properties:
+        id:
+          description: sub account id
+          type: string
+          format: uuid
+          example: acc_xyz
+        name:
+          description: sub account name
+          type: string
+          example: The Shire Haberdashery
+        account_type:
+          description: sub account type (live or test)
+          type: string
+          example: live
+        status:
+          description: sub account status
+          type: string
+          enum:
+          - created
+          - submitted
+          - information_needed
+          - rejected
+          - enabled
+          - disabled
+          - archived
+          example: enabled
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        platform_account_id:
+          description: id of associated platform account
+          type: string
+          format: uuid
+          example: acc_xyz
+        payout_account_id:
+          description: id of active payout bank account
+          type: string
+          format: uuid
+          example: ba_xyz
+        business_id:
+          description: id of associated business
+          type: string
+          format: uuid
+          example: biz_xyz
+        application_fee_rates:
+          type: array
+          description: list of associated application fee rates
+        processing_ready:
+          description: sub account ready for processing
+          type: boolean
+          example: false
+        payout_ready:
+          description: sub account ready for payouts
+          type: boolean
+          example: false
+        related_accounts:
+          description: when a live sub account is created, a related test account is automatically created; this provides both ids
+          type: object
+          properties:
+            live_account_id:
+              type: string
+              format: uuid
+              description: live sub account id (this will be nil if a sub account was created with test credentials)
+              example: acc_xyz
+            test_account_id:
+              type: string
+              format: uuid
+              description: test sub account id
+              example: acc_xyz
+        payments_activated_on:
+          description: date and time when the first successful payment was processed on this sub account
+          type:
+          - string
+          - 'null'
+          format: date-time
+          example: '2021-01-15T12:00:00Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+x-tagGroups:
+- name: Authorization
+  tags:
+  - API Credentials
+  - Web Component Tokens
+- name: For Platforms
+  tags:
+  - Sub Accounts
+  - Platform Wallet Accounts
+  - Onboarding via Component
+  - Hosted Onboarding
+  - Onboarding via API
+  - Fee Configurations
+  - Proceeds
+  - Reports
+- name: Payment Resources
+  tags:
+  - Payments
+  - Payment Methods
+  - Tokenize via Component
+  - Payment Method Groups
+  - Refunds
+  - Disputes
+  - Payouts
+  - Payout Holds
+  - Balance Transactions
+  - Ach Return Fees
+  - Payment Method Migration
+- name: Checkout Resources
+  tags:
+  - Checkouts
+  - Checkout via Component
+  - Checkout via API
+- name: Insurance Resources
+  tags:
+  - Bind Insurance
+- name: Entity Resources
+  tags:
+  - Business
+  - Identity
+  - Address
+  - Document
+  - Bank Account
+  - Terms and Conditions
+  - Provisioning
+- name: Card Present Resources
+  tags:
+  - Terminals
+  - Terminals Orders
+- name: Libraries
+  tags:
+  - JustiFi Web Components
+  - JustiFi SDK
+- name: Event Publishing
+  tags:
+  - Events
+  - Webhook Delivery
