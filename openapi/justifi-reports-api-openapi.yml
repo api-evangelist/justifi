@@ -109,24 +109,98 @@ paths:
                       $ref: '#/components/schemas/Report'
 components:
   schemas:
-    Envelope:
+    ReportPaymentListParameters:
       type: object
+      required:
+      - report_type
       properties:
-        id:
-          description: the object id, also found in the data object
+        report_type:
           type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
+          enum:
+          - payment_list
+        payment_status:
+          description: the payment status to filter by
           type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
+          enum:
+          - authorized
+          - failed
+          - succeeded
+          - canceled
+          example: succeeded
+        payment_method_id:
+          description: the payment method id to filter by
+          type: string
+          example: pm_xyz
+        terminal_id:
+          description: the terminal_id to filter by
+          type: string
+          example: trm_xyz
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    ReportParameters:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/ReportProceedsParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportPayoutParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportInterchangeFeeParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportSubAccountSummaryParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportPaymentListParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
     ReportInterchangeFeeParameters:
       type: object
       required:
@@ -173,7 +247,7 @@ components:
           description: the report nickname
           type: string
           example: My Report
-    ReportPaymentListParameters:
+    ReportSubAccountSummaryParameters:
       type: object
       required:
       - report_type
@@ -181,24 +255,7 @@ components:
         report_type:
           type: string
           enum:
-          - payment_list
-        payment_status:
-          description: the payment status to filter by
-          type: string
-          enum:
-          - authorized
-          - failed
-          - succeeded
-          - canceled
-          example: succeeded
-        payment_method_id:
-          description: the payment method id to filter by
-          type: string
-          example: pm_xyz
-        terminal_id:
-          description: the terminal_id to filter by
-          type: string
-          example: trm_xyz
+          - sub_account_summary
         start_date:
           type: string
           format: date
@@ -213,6 +270,93 @@ components:
           description: the report nickname
           type: string
           example: My Report
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    ReportProceedsParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - proceeds
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    ReportType:
+      description: which report was generated
+      type: string
+      example: proceeds
+      enum:
+      - proceeds
+      - payout
+      - interchange_fee
+      - sub_account_summary
+      - payment_list
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
     Report:
       type: object
       properties:
@@ -271,150 +415,6 @@ components:
           example: acc_xyz
         parameters:
           $ref: '#/components/schemas/ReportParameters'
-    ReportProceedsParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - proceeds
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    ReportType:
-      description: which report was generated
-      type: string
-      example: proceeds
-      enum:
-      - proceeds
-      - payout
-      - interchange_fee
-      - sub_account_summary
-      - payment_list
-    ReportParameters:
-      oneOf:
-      - allOf:
-        - $ref: '#/components/schemas/ReportProceedsParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportPayoutParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportInterchangeFeeParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportSubAccountSummaryParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportPaymentListParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-    ReportSubAccountSummaryParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - sub_account_summary
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
   parameters:
     id-path:
       in: path

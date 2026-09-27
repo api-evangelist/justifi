@@ -128,25 +128,123 @@ paths:
                     data:
                       $ref: '#/components/schemas/PayoutCsvReport'
 components:
+  parameters:
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+    deposits-before:
+      in: query
+      name: deposits_before
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which deposit before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    created-before:
+      in: query
+      name: created_before
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    created-after:
+      in: query
+      name: created_after
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    deposits-after:
+      in: query
+      name: deposits_after
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
   schemas:
-    Envelope:
+    Envelope-list:
       type: object
       properties:
         id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
+          description: the object id
+          type: number
+          example: 1
         type:
           description: the object type, or array of objects
           type: string
           example: account
         data:
-          description: the attributes for the object
-          type: object
+          description: the list of objects
+          type: array
         page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    PayoutCsvReport:
+      type: object
+      properties:
+        id:
+          description: unique payout id
+          type: string
+          example: po_xyz
+        csv_url:
+          description: url that links to downloadable CSV report for payout.
+          type: string
+          example: https://justifi-test-payouts-reports.s3.amazonaws.com/acc_1234lkj/po_23jdfi36dqhj.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test
     Payout:
       type: object
       properties:
@@ -239,53 +337,24 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    PayoutCsvReport:
+    Envelope:
       type: object
       properties:
         id:
-          description: unique payout id
+          description: the object id, also found in the data object
           type: string
-          example: po_xyz
-        csv_url:
-          description: url that links to downloadable CSV report for payout.
-          type: string
-          example: https://justifi-test-payouts-reports.s3.amazonaws.com/acc_1234lkj/po_23jdfi36dqhj.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
+          format: uuid
+          example: prefix_xyz (same as id of data object)
         type:
           description: the object type, or array of objects
           type: string
           example: account
         data:
-          description: the list of objects
-          type: array
+          description: the attributes for the object
+          type: object
         page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+          description: information for cursor style pagination, is null for single records
+          type: null
     PayoutBankAccount:
       type: object
       properties:
@@ -323,75 +392,6 @@ components:
           type: string
           enum:
           - checking
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    deposits-after:
-      in: query
-      name: deposits_after
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    created-before:
-      in: query
-      name: created_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    created-after:
-      in: query
-      name: created_after
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    deposits-before:
-      in: query
-      name: deposits_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which deposit before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
 x-tagGroups:
 - name: Authorization
   tags:

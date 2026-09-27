@@ -166,25 +166,45 @@ paths:
                     data:
                       $ref: '#/components/schemas/TerminalsOrder'
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    created-before:
+      in: query
+      name: created_before
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    created-after:
+      in: query
+      name: created_after
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
   schemas:
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
     TerminalsOrder:
       type: object
       properties:
@@ -300,44 +320,24 @@ components:
                 - P400
                 - E285
                 example: V400m
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    created-before:
-      in: query
-      name: created_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    created-after:
-      in: query
-      name: created_after
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
 x-tagGroups:
 - name: Authorization
   tags:

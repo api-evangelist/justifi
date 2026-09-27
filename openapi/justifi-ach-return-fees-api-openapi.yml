@@ -47,6 +47,22 @@ paths:
                     data:
                       $ref: '#/components/schemas/AchReturnFee'
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
   schemas:
     Envelope:
       type: object
@@ -94,22 +110,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:

@@ -290,7 +290,52 @@ paths:
         '204':
           description: The request was sent to the terminal
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    sub-account:
+      in: header
+      name: Sub-Account
+      schema:
+        type: string
+      required: false
+      example: acc_123xyz
+      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
+
+        '
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
   schemas:
+    TerminalStatus:
+      type: object
+      properties:
+        id:
+          description: unique terminal id
+          type: string
+          example: trm_abc123
+        status:
+          description: current terminal status
+          example: CONNECTED
+          type: string
+        last_date_time_connected:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        last_date_time_active:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
     Envelope:
       type: object
       properties:
@@ -408,51 +453,6 @@ components:
           description: the encoded id of the first record in the current list
           type: string
           example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    TerminalStatus:
-      type: object
-      properties:
-        id:
-          description: unique terminal id
-          type: string
-          example: trm_abc123
-        status:
-          description: current terminal status
-          example: CONNECTED
-          type: string
-        last_date_time_connected:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        last_date_time_active:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    sub-account:
-      in: header
-      name: Sub-Account
-      schema:
-        type: string
-      required: false
-      example: acc_123xyz
-      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
-
-        '
 x-tagGroups:
 - name: Authorization
   tags:

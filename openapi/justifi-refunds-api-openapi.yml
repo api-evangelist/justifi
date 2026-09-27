@@ -228,41 +228,6 @@ paths:
                       $ref: '#/components/schemas/Refund'
 components:
   schemas:
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
     Refund:
       type: object
       properties:
@@ -331,25 +296,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
     ReturnedFeeResponse:
       type: object
       description: A returned fee object showing fee details returned to the merchant with a refund
@@ -399,7 +345,70 @@ components:
       - original_amount
       - currency
       - remaining_amount
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
   parameters:
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     id-path:
       in: path
       name: id
@@ -407,14 +416,6 @@ components:
         type: string
         format: uuid
       required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
     sub-account:
       in: header
       name: Sub-Account
@@ -425,15 +426,14 @@ components:
       description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
 
         '
-    idempotency-key-header:
+    authorization-header:
       in: header
-      name: Idempotency-Key
+      name: Authorization
       schema:
         type: string
-        format: uuid
       required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:

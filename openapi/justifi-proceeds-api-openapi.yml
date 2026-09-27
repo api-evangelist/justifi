@@ -97,25 +97,67 @@ paths:
                     data:
                       $ref: '#/components/schemas/ProceedsReport'
 components:
+  parameters:
+    deposits-before:
+      in: query
+      name: deposits_before
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which deposit before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    created-before:
+      in: query
+      name: created_before
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    created-after:
+      in: query
+      name: created_after
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
+    deposits-after:
+      in: query
+      name: deposits_after
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
   schemas:
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
     Envelope-list:
       type: object
       properties:
@@ -167,6 +209,24 @@ components:
           description: url that links to downloadable JSON report for proceeds payout
           type: string
           example: https://justifi-test-platform-proceeds-reports.s3.amazonaws.com/acc_1234lkj/po_23jdfi36dqhj.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     Proceed:
       type: object
       properties:
@@ -286,66 +346,6 @@ components:
           type: string
           enum:
           - checking
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    deposits-after:
-      in: query
-      name: deposits_after
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    created-before:
-      in: query
-      name: created_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    created-after:
-      in: query
-      name: created_after
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    deposits-before:
-      in: query
-      name: deposits_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which deposit before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
 x-tagGroups:
 - name: Authorization
   tags:
