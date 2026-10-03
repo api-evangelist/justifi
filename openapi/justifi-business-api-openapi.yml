@@ -329,9 +329,41 @@ paths:
                       $ref: '#/components/schemas/BusinessResponse'
 components:
   schemas:
-    Identity:
+    PageInfo:
       type: object
       properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    IdentityResponse:
+      type: object
+      properties:
+        id:
+          description: unique identity id
+          type: string
+          example: idty_xyz
+        platform_account_id:
+          type: string
+          format: uuid
+          example: acc_xyz
+        business_id:
+          type: string
+          format: uuid
+          example: biz_xyz
+          description: associated business
         name:
           type: string
           example: Person Name
@@ -360,59 +392,30 @@ components:
           type: string
           example: '1980'
           description: four-digit birth year (must be at least 18 years old)
-        identification_number:
+        ssn_last4:
           type: string
-          example: '123456789'
-          description: full social security number
+          example: '6789'
+          description: last four digits of social security number (computed from identification_number)
         is_owner:
           type: boolean
+          example: true
           description: if an identity owns 25% or more of the business, they are considered an owner
         ownership_percentage:
           type: integer
           minimum: 0
           maximum: 100
           example: 25
-          description: percentage of the business owned by this identity (0–100); only returned when the identity owns a business (proprietor_id set), not based on the is_owner column. Only owners with at least 25% ownership should be included.
+          description: percentage of the business owned by this identity (0–100); only returned when is_owner is true
         metadata:
           type: object
           format: json
           description: any useful information you'd like to store alongside this identity
-          additionalProperties: true
-          example:
-            language: english
-            social_network: '@person'
         address:
-          oneOf:
-          - $ref: '#/components/schemas/Address'
-          - type: object
-            properties:
-              id:
-                type: string
-    AddressResponse:
-      type: object
-      properties:
-        id:
-          description: unique address id
-          type: string
-          example: addr_123xyz
-        line1:
-          type: string
-          example: 123 Example St
-        line2:
-          type: string
-          example: Suite 101
-        city:
-          type: string
-          example: Minneapolis
-        state:
-          type: string
-          example: MN
-        postal_code:
-          type: string
-          example: '55555'
-        country:
-          type: string
-          example: USA
+          $ref: '#/components/schemas/AddressResponse'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
         created_at:
           type: string
           format: date-time
@@ -516,6 +519,137 @@ components:
           type: string
           example: 5 years
           description: duration of a business relationship between two parties
+    Address:
+      type: object
+      properties:
+        line1:
+          type: string
+          example: 123 Example St
+        line2:
+          type: string
+          example: Suite 101
+        city:
+          type: string
+          example: Minneapolis
+        state:
+          type: string
+          example: MN
+        postal_code:
+          type: string
+          example: '55555'
+        country:
+          type: string
+          example: USA
+    AddressResponse:
+      type: object
+      properties:
+        id:
+          description: unique address id
+          type: string
+          example: addr_123xyz
+        line1:
+          type: string
+          example: 123 Example St
+        line2:
+          type: string
+          example: Suite 101
+        city:
+          type: string
+          example: Minneapolis
+        state:
+          type: string
+          example: MN
+        postal_code:
+          type: string
+          example: '55555'
+        country:
+          type: string
+          example: USA
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    Identity:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Person Name
+          description: legal name
+        title:
+          type: string
+          example: President
+          description: job title
+        email:
+          type: string
+          example: person.name@justifi.ai
+          description: email address
+        phone:
+          type: string
+          example: '6124011111'
+          description: phone number
+        dob_day:
+          type: string
+          example: '01'
+          description: two-digit birth day
+        dob_month:
+          type: string
+          example: '01'
+          description: two-digit birth month
+        dob_year:
+          type: string
+          example: '1980'
+          description: four-digit birth year (must be at least 18 years old)
+        identification_number:
+          type: string
+          example: '123456789'
+          description: full social security number
+        is_owner:
+          type: boolean
+          description: if an identity owns 25% or more of the business, they are considered an owner
+        ownership_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 25
+          description: percentage of the business owned by this identity (0–100); only returned when the identity owns a business (proprietor_id set), not based on the is_owner column. Only owners with at least 25% ownership should be included.
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this identity
+          additionalProperties: true
+          example:
+            language: english
+            social_network: '@person'
+        address:
+          oneOf:
+          - $ref: '#/components/schemas/Address'
+          - type: object
+            properties:
+              id:
+                type: string
     BusinessResponse:
       type: object
       properties:
@@ -647,82 +781,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    IdentityResponse:
-      type: object
-      properties:
-        id:
-          description: unique identity id
-          type: string
-          example: idty_xyz
-        platform_account_id:
-          type: string
-          format: uuid
-          example: acc_xyz
-        business_id:
-          type: string
-          format: uuid
-          example: biz_xyz
-          description: associated business
-        name:
-          type: string
-          example: Person Name
-          description: legal name
-        title:
-          type: string
-          example: President
-          description: job title
-        email:
-          type: string
-          example: person.name@justifi.ai
-          description: email address
-        phone:
-          type: string
-          example: '6124011111'
-          description: phone number
-        dob_day:
-          type: string
-          example: '01'
-          description: two-digit birth day
-        dob_month:
-          type: string
-          example: '01'
-          description: two-digit birth month
-        dob_year:
-          type: string
-          example: '1980'
-          description: four-digit birth year (must be at least 18 years old)
-        ssn_last4:
-          type: string
-          example: '6789'
-          description: last four digits of social security number (computed from identification_number)
-        is_owner:
-          type: boolean
-          example: true
-          description: if an identity owns 25% or more of the business, they are considered an owner
-        ownership_percentage:
-          type: integer
-          minimum: 0
-          maximum: 100
-          example: 25
-          description: percentage of the business owned by this identity (0–100); only returned when is_owner is true
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this identity
-        address:
-          $ref: '#/components/schemas/AddressResponse'
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/Document'
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
     Document:
       type: object
       properties:
@@ -800,45 +858,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    Address:
-      type: object
-      properties:
-        line1:
-          type: string
-          example: 123 Example St
-        line2:
-          type: string
-          example: Suite 101
-        city:
-          type: string
-          example: Minneapolis
-        state:
-          type: string
-          example: MN
-        postal_code:
-          type: string
-          example: '55555'
-        country:
-          type: string
-          example: USA
     Envelope-list:
       type: object
       properties:
@@ -924,25 +943,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
   parameters:
     id-path:
       in: path

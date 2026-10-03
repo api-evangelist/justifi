@@ -75,23 +75,43 @@ paths:
                       $ref: '#/components/schemas/PayoutHold'
 components:
   schemas:
-    Envelope-list:
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    Envelope:
       type: object
       properties:
         id:
-          description: the object id
-          type: number
-          example: 1
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
         type:
           description: the object type, or array of objects
           type: string
           example: account
         data:
-          description: the list of objects
-          type: array
+          description: the attributes for the object
+          type: object
         page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
+          description: information for cursor style pagination, is null for single records
+          type: null
     PayoutHold:
       type: object
       properties:
@@ -134,44 +154,49 @@ components:
           type: string
           format: date-time
           example: '2024-01-01T10:00:00Z'
-    Envelope:
+    Envelope-list:
       type: object
       properties:
         id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
+          description: the object id
+          type: number
+          example: 1
         type:
           description: the object type, or array of objects
           type: string
           example: account
         data:
-          description: the attributes for the object
-          type: object
+          description: the list of objects
+          type: array
         page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
   parameters:
+    end-date-after:
+      in: query
+      name: end_date_after
+      schema:
+        type: string
+        format: date
+      required: false
+      example: '2024-01-01'
+      description: Filter by end date after the specified date (ISO 8601 format)
+    payout-hold-id-path:
+      in: path
+      name: payout_hold_id
+      schema:
+        type: string
+      required: true
+      example: poh_abc123xyz
+      description: Payout hold public ID with poh_ prefix
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
     start-date-before:
       in: query
       name: start_date_before
@@ -190,42 +215,15 @@ components:
       required: false
       example: '2024-01-01'
       description: Filter by start date after the specified date (ISO 8601 format)
-    payout-hold-id-path:
-      in: path
-      name: payout_hold_id
-      schema:
-        type: string
-      required: true
-      example: poh_abc123xyz
-      description: Payout hold public ID with poh_ prefix
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    created-before:
+    end-date-before:
       in: query
-      name: created_before
-      schema:
-        type: string
-        format: date-time
-      required: false
-      example: '2022-01-01T00:00:00Z'
-      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    end-date-after:
-      in: query
-      name: end_date_after
+      name: end_date_before
       schema:
         type: string
         format: date
       required: false
-      example: '2024-01-01'
-      description: Filter by end date after the specified date (ISO 8601 format)
+      example: '2024-01-31'
+      description: Filter by end date before the specified date (ISO 8601 format)
     created-after:
       in: query
       name: created_after
@@ -237,15 +235,17 @@ components:
       description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
 
         '
-    end-date-before:
+    created-before:
       in: query
-      name: end_date_before
+      name: created_before
       schema:
         type: string
-        format: date
+        format: date-time
       required: false
-      example: '2024-01-31'
-      description: Filter by end date before the specified date (ISO 8601 format)
+      example: '2022-01-01T00:00:00Z'
+      description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
+
+        '
 x-tagGroups:
 - name: Authorization
   tags:

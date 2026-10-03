@@ -297,64 +297,132 @@ paths:
                 - $ref: '#/components/schemas/CardPresentResponse'
 components:
   schemas:
-    CreateBankAccount:
+    CardPaymentMethodWithBinDetails:
       type: object
-      description: Bank Account
       properties:
-        account_owner_name:
-          description: account owner name
+        status:
+          description: signals whether the payment method is valid or invalid
           type: string
-          example: Lindsay Whalen
-        routing_number:
-          description: routing number
+          example: valid
+        invalid_reason:
+          description: informs reason that the payment method has been marked invalid, if status is invalid
+          type:
+          - string
+          - 'null'
+          example: nil
+        created_at:
           type: string
-          example: '110000000'
-        account_number:
-          description: bank account number
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        updated_at:
           type: string
-          example: 000123456789
-        account_type:
-          description: type of account
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        card:
+          $ref: '#/components/schemas/CardWithBinDetails'
+        customer_id:
+          description: id of the customer associated with the payment method
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    CardPresentResponse:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: pm_123xyz
+        type:
+          description: the object type, or array of objects
           type: string
-          example: checking
-          enum:
-          - checking
-          - savings
-        account_owner_type:
-          description: type of account holder
-          type: string
-          example: individual
-          enum:
-          - individual
-          - company
-        country:
-          description: country associated with the bank account
-          type: string
-          example: US
-        currency:
-          description: currency of the bank account
-          type: string
-          example: usd
-          enum:
-          - usd
-          - cad
-        bank_name:
-          description: bank name
-          type: string
-          example: Wells Fargo
-        metadata:
+          example: payment_method
+        data:
+          description: the attributes for the object
           type: object
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example: {}
-      required:
-      - account_owner_name
-      - routing_number
-      - account_number
-      - account_type
-      - account_owner_type
-      - country
-      - currency
+          properties:
+            signature:
+              description: unique signature associated with the payment_method
+              type:
+              - string
+              - 'null'
+              example: 3aGWnUznQ
+            customer_id:
+              description: customer_id is a deprecated field. Please use our payment method groups instead.
+              type:
+              - string
+              - 'null'
+              example: cust_123abc
+            account_id:
+              description: account id associated with payment method
+              type:
+              - string
+              - 'null'
+              example: acc_123
+            status:
+              description: signals whether the payment method is valid or invalid
+              type: string
+              example: valid
+            invalid_reason:
+              description: informs reason that the payment method has been marked invalid, if status is invalid
+              type:
+              - string
+              - 'null'
+              example: INVALID_ACCOUNT_NUMBER
+            created_at:
+              type: string
+              format: date-time
+              example: '2024-01-01T12:00:00Z'
+            updated_at:
+              type: string
+              format: date-time
+              example: '2024-01-01T12:00:00Z'
+            card_present:
+              description: the card present payment method
+              type: object
+              properties:
+                id:
+                  description: unique card present payment method id
+                  type: string
+                  format: uuid
+                  example: cp_7SdSRKRMADOn2Yi5expjej
+                brand:
+                  description: card brand or institution
+                  type: string
+                  example: visa
+                cardholder_name:
+                  description: name of the cardholder
+                  type: string
+                  example: CARDHOLDER/VISA
+                last4:
+                  description: last 4 digits of the card number
+                  type: string
+                  example: '2970'
+                expiry:
+                  description: card expiration date in MM/YY format
+                  type: string
+                  example: 11/30
+                type:
+                  description: the payment method type
+                  type: string
+                  example: card_present
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type:
+          - string
+          - 'null'
     CardResponse:
       type: object
       properties:
@@ -487,6 +555,152 @@ components:
           type:
           - string
           - 'null'
+    CardPresentPaymentMethod:
+      type: object
+      properties:
+        status:
+          description: signals whether the payment method is valid or invalid
+          type: string
+          example: valid
+        invalid_reason:
+          description: informs reason that the payment method has been marked invalid, if status is invalid
+          type:
+          - string
+          - 'null'
+          example: nil
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        card_present:
+          type: object
+          properties:
+            id:
+              description: unique card present payment method id
+              type: string
+              format: uuid
+              example: cp_7SdSRKRMADOn2Yi5expjej
+            brand:
+              description: card brand or institution
+              type: string
+              example: visa
+            cardholder_name:
+              description: name of the cardholder
+              type: string
+              example: CARDHOLDER/VISA
+            last4:
+              description: last 4 digits of the card number
+              type: string
+              example: '2970'
+            expiry:
+              description: card expiration date in MM/YY format
+              type: string
+              example: 11/30
+            type:
+              description: the payment method type
+              type: string
+              example: card_present
+        customer_id:
+          description: id of the customer associated with the payment method
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    CreateCard:
+      type: object
+      properties:
+        name:
+          description: cardholder full name
+          type: string
+          example: Kevin Garnett
+        number:
+          description: card number
+          type: string
+          example: 4242424242424242
+        verification:
+          description: card verification number
+          type: string
+          example: 123
+        month:
+          description: card expiration month
+          type: string
+          example: 5
+        year:
+          description: card expiration year
+          type: string
+          example: 2042
+        address_line1:
+          description: card address street
+          type: string
+          example: 123 Fake St
+        address_line2:
+          description: card address apartment, suite, etc.
+          type: string
+          example: Suite 101
+        address_city:
+          description: card address city
+          type: string
+          example: Cityville
+        address_state:
+          description: card address state
+          type: string
+          example: MN
+        address_postal_code:
+          description: card address ZIP
+          type: string
+          example: 55555
+        address_country:
+          description: card address 2-character country code
+          type: string
+          example: US
+        brand:
+          description: card brand or institution
+          type: string
+          example: Visa
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this card
+          example: {}
+      required:
+      - name
+      - number
+      - month
+      - year
+      - address_postal_code
     BankAccountPaymentMethodWithStatus:
       type: object
       properties:
@@ -528,91 +742,83 @@ components:
           - string
           - 'null'
           example: acc_123
-    CardPresentResponse:
+    BankAccount:
       type: object
       properties:
         id:
-          description: the object id
-          type: number
-          example: pm_123xyz
-        type:
-          description: the object type, or array of objects
+          description: unique bank account payment method id
           type: string
-          example: payment_method
-        data:
-          description: the attributes for the object
-          type: object
-          properties:
-            signature:
-              description: unique signature associated with the payment_method
-              type:
-              - string
-              - 'null'
-              example: 3aGWnUznQ
-            customer_id:
-              description: customer_id is a deprecated field. Please use our payment method groups instead.
-              type:
-              - string
-              - 'null'
-              example: cust_123abc
-            account_id:
-              description: account id associated with payment method
-              type:
-              - string
-              - 'null'
-              example: acc_123
-            status:
-              description: signals whether the payment method is valid or invalid
-              type: string
-              example: valid
-            invalid_reason:
-              description: informs reason that the payment method has been marked invalid, if status is invalid
-              type:
-              - string
-              - 'null'
-              example: INVALID_ACCOUNT_NUMBER
-            created_at:
-              type: string
-              format: date-time
-              example: '2024-01-01T12:00:00Z'
-            updated_at:
-              type: string
-              format: date-time
-              example: '2024-01-01T12:00:00Z'
-            card_present:
-              description: the card present payment method
-              type: object
-              properties:
-                id:
-                  description: unique card present payment method id
-                  type: string
-                  format: uuid
-                  example: cp_7SdSRKRMADOn2Yi5expjej
-                brand:
-                  description: card brand or institution
-                  type: string
-                  example: visa
-                cardholder_name:
-                  description: name of the cardholder
-                  type: string
-                  example: CARDHOLDER/VISA
-                last4:
-                  description: last 4 digits of the card number
-                  type: string
-                  example: '2970'
-                expiry:
-                  description: card expiration date in MM/YY format
-                  type: string
-                  example: 11/30
-                type:
-                  description: the payment method type
-                  type: string
-                  example: card_present
-        page_info:
-          description: information for cursor style pagination, is null for single records
+          format: uuid
+          example: pm_123xyz
+        account_owner_name:
+          description: account owner name
+          type: string
+          example: Lindsay Whalen
+        account_type:
+          description: type of account (checking, savings, etc.)
+          type: string
+          example: checking
+        bank_name:
+          description: bank name
           type:
           - string
           - 'null'
+          example: Wells Fargo
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        token:
+          description: 'same value as unique bank account id; can be saved and used to process multiple
+
+            payments with the same bank account
+
+            '
+          example: pm_123xyz
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example:
+            new: info
+    PaymentError:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: error code if the payment fails
+              type: string
+              example: card_declined
+            decline_code:
+              description: decline code if the payment fails
+              type: string
+              example: do_not_retry
+            message:
+              description: text description of the error code
+              type: string
+              example: This card has been rejected. Please try a different card or payment method
+            network:
+              description: card network used for payment
+              type:
+              - string
+              - 'null'
+              example: MASTERCARD
+            network_error_category:
+              description: network error category code
+              type:
+              - string
+              - 'null'
+              example: '03'
+            network_error_code:
+              description: network error code
+              type:
+              - string
+              - 'null'
+              example: '504'
     CardWithBinDetails:
       type: object
       properties:
@@ -686,359 +892,64 @@ components:
           description: BIN details for this card. Not guaranteed to be present — availability depends on the card network and issuer.
           allOf:
           - $ref: '#/components/schemas/BinDetails'
-    Envelope-list:
+    CreateBankAccount:
       type: object
+      description: Bank Account
       properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    CardPresentPaymentMethod:
-      type: object
-      properties:
-        status:
-          description: signals whether the payment method is valid or invalid
-          type: string
-          example: valid
-        invalid_reason:
-          description: informs reason that the payment method has been marked invalid, if status is invalid
-          type:
-          - string
-          - 'null'
-          example: nil
-        created_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        card_present:
-          type: object
-          properties:
-            id:
-              description: unique card present payment method id
-              type: string
-              format: uuid
-              example: cp_7SdSRKRMADOn2Yi5expjej
-            brand:
-              description: card brand or institution
-              type: string
-              example: visa
-            cardholder_name:
-              description: name of the cardholder
-              type: string
-              example: CARDHOLDER/VISA
-            last4:
-              description: last 4 digits of the card number
-              type: string
-              example: '2970'
-            expiry:
-              description: card expiration date in MM/YY format
-              type: string
-              example: 11/30
-            type:
-              description: the payment method type
-              type: string
-              example: card_present
-        customer_id:
-          description: id of the customer associated with the payment method
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-    BinDetails:
-      description: BIN (Bank Identification Number) details for a card. bin_details are not guaranteed to be present on every card payment method — availability depends on the card network and issuer. When unavailable, this field will be null.
-      type:
-      - object
-      - 'null'
-      properties:
-        type:
-          description: Type of card issued, values include Credit, Debit, Prepaid, Unknown
-          type: string
-          example: Credit
-        card_brand:
-          description: Brand or network associated with card. Possible values include Visa, Mastercard, American Express, Discover
-          type: string
-          example: Visa
-        card_class:
-          type: string
-          example: Consumer
-        country:
-          description: Long form country name which issued the card
-          type: string
-          example: United States of America
-        issuer:
-          description: Issuing bank
-          type: string
-          example: WELLS FARGO BANK, N.A.
-        funding_source:
-          description: Source of funds defined by BIN for a given card. Values include Charge, Credit, Debit, Deferred Debit (Visa Only), Network Only, Prepaid
-          type: string
-          example: Credit
-    BankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account payment method id
-          type: string
-          format: uuid
-          example: pm_123xyz
         account_owner_name:
           description: account owner name
           type: string
           example: Lindsay Whalen
+        routing_number:
+          description: routing number
+          type: string
+          example: '110000000'
+        account_number:
+          description: bank account number
+          type: string
+          example: 000123456789
         account_type:
-          description: type of account (checking, savings, etc.)
+          description: type of account
           type: string
           example: checking
+          enum:
+          - checking
+          - savings
+        account_owner_type:
+          description: type of account holder
+          type: string
+          example: individual
+          enum:
+          - individual
+          - company
+        country:
+          description: country associated with the bank account
+          type: string
+          example: US
+        currency:
+          description: currency of the bank account
+          type: string
+          example: usd
+          enum:
+          - usd
+          - cad
         bank_name:
           description: bank name
-          type:
-          - string
-          - 'null'
-          example: Wells Fargo
-        acct_last_four:
-          description: last 4 digits of the account number
           type: string
-          example: 1111
-        token:
-          description: 'same value as unique bank account id; can be saved and used to process multiple
-
-            payments with the same bank account
-
-            '
-          example: pm_123xyz
+          example: Wells Fargo
         metadata:
-          type:
-          - object
-          - 'null'
+          type: object
           format: json
           description: any useful information you'd like to store alongside this bank account
-          example:
-            new: info
-    UpdateCard:
-      type: object
-      properties:
-        month:
-          description: new expiration month
-          type: string
-          example: 5
-        year:
-          description: new expiration year
-          type: string
-          example: 2042
-        address_line1:
-          description: new card address street
-          type: string
-          example: 123 Fake St
-        address_line2:
-          description: new card address apartment, suite, etc.
-          type: string
-          example: Suite 101
-        address_city:
-          description: new card address city
-          type: string
-          example: Cityville
-        address_state:
-          description: new card address state
-          type: string
-          example: MN
-        address_postal_code:
-          description: new card address ZIP
-          type: string
-          example: 55555
-        address_country:
-          description: new card address 2-character country code
-          type: string
-          example: US
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this card; when you update metadata, any previous metadata will be overwritten
-          example:
-            new: info
-    CardPaymentMethodWithBinDetails:
-      type: object
-      properties:
-        status:
-          description: signals whether the payment method is valid or invalid
-          type: string
-          example: valid
-        invalid_reason:
-          description: informs reason that the payment method has been marked invalid, if status is invalid
-          type:
-          - string
-          - 'null'
-          example: nil
-        created_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        card:
-          $ref: '#/components/schemas/CardWithBinDetails'
-        customer_id:
-          description: id of the customer associated with the payment method
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    CreateCard:
-      type: object
-      properties:
-        name:
-          description: cardholder full name
-          type: string
-          example: Kevin Garnett
-        number:
-          description: card number
-          type: string
-          example: 4242424242424242
-        verification:
-          description: card verification number
-          type: string
-          example: 123
-        month:
-          description: card expiration month
-          type: string
-          example: 5
-        year:
-          description: card expiration year
-          type: string
-          example: 2042
-        address_line1:
-          description: card address street
-          type: string
-          example: 123 Fake St
-        address_line2:
-          description: card address apartment, suite, etc.
-          type: string
-          example: Suite 101
-        address_city:
-          description: card address city
-          type: string
-          example: Cityville
-        address_state:
-          description: card address state
-          type: string
-          example: MN
-        address_postal_code:
-          description: card address ZIP
-          type: string
-          example: 55555
-        address_country:
-          description: card address 2-character country code
-          type: string
-          example: US
-        brand:
-          description: card brand or institution
-          type: string
-          example: Visa
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this card
           example: {}
       required:
-      - name
-      - number
-      - month
-      - year
-      - address_postal_code
-    PaymentError:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: error code if the payment fails
-              type: string
-              example: card_declined
-            decline_code:
-              description: decline code if the payment fails
-              type: string
-              example: do_not_retry
-            message:
-              description: text description of the error code
-              type: string
-              example: This card has been rejected. Please try a different card or payment method
-            network:
-              description: card network used for payment
-              type:
-              - string
-              - 'null'
-              example: MASTERCARD
-            network_error_category:
-              description: network error category code
-              type:
-              - string
-              - 'null'
-              example: '03'
-            network_error_code:
-              description: network error code
-              type:
-              - string
-              - 'null'
-              example: '504'
+      - account_owner_name
+      - routing_number
+      - account_number
+      - account_type
+      - account_owner_type
+      - country
+      - currency
     BankAccountResponse:
       type: object
       properties:
@@ -1135,7 +1046,105 @@ components:
           type:
           - string
           - 'null'
+    UpdateCard:
+      type: object
+      properties:
+        month:
+          description: new expiration month
+          type: string
+          example: 5
+        year:
+          description: new expiration year
+          type: string
+          example: 2042
+        address_line1:
+          description: new card address street
+          type: string
+          example: 123 Fake St
+        address_line2:
+          description: new card address apartment, suite, etc.
+          type: string
+          example: Suite 101
+        address_city:
+          description: new card address city
+          type: string
+          example: Cityville
+        address_state:
+          description: new card address state
+          type: string
+          example: MN
+        address_postal_code:
+          description: new card address ZIP
+          type: string
+          example: 55555
+        address_country:
+          description: new card address 2-character country code
+          type: string
+          example: US
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this card; when you update metadata, any previous metadata will be overwritten
+          example:
+            new: info
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    BinDetails:
+      description: BIN (Bank Identification Number) details for a card. bin_details are not guaranteed to be present on every card payment method — availability depends on the card network and issuer. When unavailable, this field will be null.
+      type:
+      - object
+      - 'null'
+      properties:
+        type:
+          description: Type of card issued, values include Credit, Debit, Prepaid, Unknown
+          type: string
+          example: Credit
+        card_brand:
+          description: Brand or network associated with card. Possible values include Visa, Mastercard, American Express, Discover
+          type: string
+          example: Visa
+        card_class:
+          type: string
+          example: Consumer
+        country:
+          description: Long form country name which issued the card
+          type: string
+          example: United States of America
+        issuer:
+          description: Issuing bank
+          type: string
+          example: WELLS FARGO BANK, N.A.
+        funding_source:
+          description: Source of funds defined by BIN for a given card. Values include Charge, Credit, Debit, Deferred Debit (Visa Only), Network Only, Prepaid
+          type: string
+          example: Credit
   parameters:
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     created-after:
       in: query
       name: created_after
@@ -1145,16 +1154,6 @@ components:
       required: false
       example: '2022-01-01T00:00:00Z'
       description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    customer-id:
-      in: query
-      name: customer_id
-      schema:
-        type: string
-      required: false
-      example: cust_123xyz
-      description: 'Note: customer_id is a deprecated field. Please use our payment method groups instead. filter records which are associated with a customer.
 
         '
     sub-account:
@@ -1177,15 +1176,6 @@ components:
       description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
 
         '
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     token-path:
       in: path
       name: token
@@ -1200,6 +1190,26 @@ components:
       required: true
       example: Bearer {access_token}
       description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    payment-method-group-id:
+      in: query
+      name: payment_method_group_id
+      schema:
+        type: string
+      required: false
+      example: pmg_123xyz
+      description: 'filter records which are associated with a payment method group.
+
+        '
+    customer-id:
+      in: query
+      name: customer_id
+      schema:
+        type: string
+      required: false
+      example: cust_123xyz
+      description: 'Note: customer_id is a deprecated field. Please use our payment method groups instead. filter records which are associated with a customer.
+
+        '
     created-before:
       in: query
       name: created_before
@@ -1209,16 +1219,6 @@ components:
       required: false
       example: '2022-01-01T00:00:00Z'
       description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    payment-method-group-id:
-      in: query
-      name: payment_method_group_id
-      schema:
-        type: string
-      required: false
-      example: pmg_123xyz
-      description: 'filter records which are associated with a payment method group.
 
         '
 x-tagGroups:

@@ -181,6 +181,80 @@ paths:
                       $ref: '#/components/schemas/SubAccountSettings'
 components:
   schemas:
+    PayoutBankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account id
+          type: string
+          format: uuid
+        full_name:
+          description: account holder's full name
+          type: string
+        bank_name:
+          description: name of bank
+          type: string
+        account_number_last4:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        routing_number:
+          type: string
+        country:
+          type: string
+          enum:
+          - US
+          - CA
+          example: US
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        nickname:
+          type: string
+        account_type:
+          type: string
+          enum:
+          - checking
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     SubAccountSettings:
       type: object
       properties:
@@ -254,6 +328,23 @@ components:
               description: null
               type: enum[standard expedited]
               example: standard
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     SubAccount:
       type: object
       properties:
@@ -343,97 +434,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    PayoutBankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account id
-          type: string
-          format: uuid
-        full_name:
-          description: account holder's full name
-          type: string
-        bank_name:
-          description: name of bank
-          type: string
-        account_number_last4:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        routing_number:
-          type: string
-        country:
-          type: string
-          enum:
-          - US
-          - CA
-          example: US
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        nickname:
-          type: string
-        account_type:
-          type: string
-          enum:
-          - checking
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
   parameters:
     id-path:
       in: path

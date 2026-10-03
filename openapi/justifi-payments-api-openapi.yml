@@ -1367,6 +1367,205 @@ paths:
                         $ref: '#/components/schemas/PaymentBalanceTransaction'
 components:
   schemas:
+    FeeResponse:
+      type: object
+      description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
+
+        subscribe to payment webhook events (recommended) to receive the full fee objects, or poll with a subsequent Get Payment request.
+
+        '
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this fee. Present when fetching a payment.
+          example: pyfee_xyz
+        type:
+          type: string
+          enum:
+          - processing_fee
+          - platform_fee
+          - refund_processing_fee
+          description: 'The type of fee:
+
+            - `processing_fee`: Fees related to payment processing costs
+
+            - `platform_fee`: Fees for your platform''s services
+
+            - `refund_processing_fee`: A processing fee charged when a refund is processed. Currently applies to CAD payments only.
+
+            '
+          example: processing_fee
+        amount:
+          type: integer
+          description: Fee amount in cents
+          example: 350
+        currency:
+          type: string
+          description: Currency of the fee amount. Present when fetching a payment.
+          enum:
+          - usd
+          - cad
+          example: usd
+        remaining_amount:
+          type: integer
+          description: Amount still available for refund in cents. Updates after each partial refund. Present when fetching a payment.
+          example: 350
+        source_configuration_id:
+          type:
+          - string
+          - 'null'
+          description: The public ID of the Standard Fee Configuration used to calculate this fee. Null when the fee was explicitly provided in the payment request rather than auto-calculated.
+          example: sfc_abc123
+        source_fee_type:
+          type:
+          - string
+          - 'null'
+          description: 'The fee type from the Standard Fee Configuration that generated this fee (e.g., `processing_ecomm`, `amex_brand_ecomm`, `platform`).
+
+            Null when the fee was explicitly provided in the payment request.
+
+            '
+          example: amex_brand_ecomm
+        refund_id:
+          type:
+          - string
+          - 'null'
+          description: The public ID of the refund this fee is associated with. Populated for `refund_processing_fee` fees (currently CAD payments only); null for all other fees. Present when fetching a payment.
+          example: re_xyz
+      required:
+      - type
+      - amount
+    ApplicationFee:
+      type: object
+      properties:
+        id:
+          description: unique application fee id
+          type: string
+          format: uuid
+          example: fee_123xyz
+        amount:
+          description: application fee amount, in cents
+          type: number
+          example: 150
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    BankAccountPaymentMethod:
+      type: object
+      properties:
+        bank_account:
+          $ref: '#/components/schemas/BankAccount'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    Fee:
+      type: object
+      description: A fee object specifying type and amount
+      properties:
+        type:
+          type: string
+          enum:
+          - processing_fee
+          - platform_fee
+          description: 'The type of fee:
+
+            - `processing_fee`: Fees related to payment processing costs
+
+            - `platform_fee`: Fees for your platform''s services
+
+            '
+          example: processing_fee
+        amount:
+          type: integer
+          description: Fee amount in cents
+          example: 350
+      required:
+      - type
+      - amount
+    BankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account payment method id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        account_owner_name:
+          description: account owner name
+          type: string
+          example: Lindsay Whalen
+        account_type:
+          description: type of account (checking, savings, etc.)
+          type: string
+          example: checking
+        bank_name:
+          description: bank name
+          type:
+          - string
+          - 'null'
+          example: Wells Fargo
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        token:
+          description: 'same value as unique bank account id; can be saved and used to process multiple
+
+            payments with the same bank account
+
+            '
+          example: pm_123xyz
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example:
+            new: info
     BankAccountPayment:
       type: object
       properties:
@@ -1548,32 +1747,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    ApplicationFee:
-      type: object
-      properties:
-        id:
-          description: unique application fee id
-          type: string
-          format: uuid
-          example: fee_123xyz
-        amount:
-          description: application fee amount, in cents
-          type: number
-          example: 150
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
     TransactionHold:
       type: object
       properties:
@@ -1586,69 +1759,154 @@ components:
           description: financial transaction id the transaction hold is associated to
           format: uuid
           example: ft_123xyz
-    Envelope-list:
+    PaymentError:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              description: error code if the payment fails
+              type: string
+              example: card_declined
+            decline_code:
+              description: decline code if the payment fails
+              type: string
+              example: do_not_retry
+            message:
+              description: text description of the error code
+              type: string
+              example: This card has been rejected. Please try a different card or payment method
+            network:
+              description: card network used for payment
+              type:
+              - string
+              - 'null'
+              example: MASTERCARD
+            network_error_category:
+              description: network error category code
+              type:
+              - string
+              - 'null'
+              example: '03'
+            network_error_code:
+              description: network error code
+              type:
+              - string
+              - 'null'
+              example: '504'
+    ReturnedFeeResponse:
+      type: object
+      description: A returned fee object showing fee details returned to the merchant with a refund
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this returned fee
+          example: rtfee_xyz
+        payment_fee_id:
+          type: string
+          description: Unique identifier for the original payment fee that was partially or fully returned
+          example: pyfee_abc
+        type:
+          type: string
+          enum:
+          - processing_fee
+          - platform_fee
+          description: 'The type of fee that was returned:
+
+            - `processing_fee`: Processing fee returned to merchant
+
+            - `platform_fee`: Platform fee returned to merchant
+
+            '
+          example: processing_fee
+        returned_amount:
+          type: integer
+          description: Amount returned to the merchant in cents
+          example: 175
+        original_amount:
+          type: integer
+          description: Original fee amount in cents from the payment
+          example: 350
+        currency:
+          type: string
+          description: Currency of the fee amounts
+          example: usd
+        remaining_amount:
+          type: integer
+          description: Amount still available for refund on the original payment fee in cents
+          example: 175
+      required:
+      - id
+      - payment_fee_id
+      - type
+      - returned_amount
+      - original_amount
+      - currency
+      - remaining_amount
+    PaymentBalanceTransaction:
       type: object
       properties:
         id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
+          description: unique payment balance transaction id
           type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    CardPaymentMethod:
-      type: object
-      properties:
-        card:
-          $ref: '#/components/schemas/Card'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-    BankAccountPaymentMethod:
-      type: object
-      properties:
-        bank_account:
-          $ref: '#/components/schemas/BankAccount'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
+          format: uuid
+          example: pbt_123xyz
+        amount:
+          description: payment balance transaction amount, in cents
+          type: number
+          example: 40145
+        balance:
+          description: balance amount of the payment balance transaction, in cents
+          type: number
+          example: 53550
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        financial_transaction_id:
+          description: id of the financial transaction associated with the payment balance transaction
+          type: string
+          format: uuid
+          example: ft_123xyz
+        payment_id:
+          description: id of the payment associated with the payment balance transaction
+          type: string
+          format: uuid
+          example: py_123xyz
+        payment_balance_txn_type:
+          description: type of the transaction object associated with the payment balance transaction
+          type: string
+          enum:
+          - payment
+          - payment_fee
+          - payout
+          - refund
+          - fee_refund
+          - dispute
+          - dispute_fee
+          - dispute_fee_refund
+          - dispute_refund
+          example: fee_refund
+        source_id:
+          description: id of the source object associated with the payment balance transaction
+          type: string
+          format: uuid
+          example: fee_123xyz
+        source_type:
+          description: type of the source object associated with the payment balance transaction
+          type: string
+          example: ApplicationFee
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
     CardPayment:
       type: object
       properties:
@@ -1831,139 +2089,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Fee:
-      type: object
-      description: A fee object specifying type and amount
-      properties:
-        type:
-          type: string
-          enum:
-          - processing_fee
-          - platform_fee
-          description: 'The type of fee:
-
-            - `processing_fee`: Fees related to payment processing costs
-
-            - `platform_fee`: Fees for your platform''s services
-
-            '
-          example: processing_fee
-        amount:
-          type: integer
-          description: Fee amount in cents
-          example: 350
-      required:
-      - type
-      - amount
-    BankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account payment method id
-          type: string
-          format: uuid
-          example: pm_123xyz
-        account_owner_name:
-          description: account owner name
-          type: string
-          example: Lindsay Whalen
-        account_type:
-          description: type of account (checking, savings, etc.)
-          type: string
-          example: checking
-        bank_name:
-          description: bank name
-          type:
-          - string
-          - 'null'
-          example: Wells Fargo
-        acct_last_four:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        token:
-          description: 'same value as unique bank account id; can be saved and used to process multiple
-
-            payments with the same bank account
-
-            '
-          example: pm_123xyz
-        metadata:
-          type:
-          - object
-          - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example:
-            new: info
-    FeeResponse:
-      type: object
-      description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
-
-        subscribe to payment webhook events (recommended) to receive the full fee objects, or poll with a subsequent Get Payment request.
-
-        '
-      properties:
-        id:
-          type: string
-          description: Unique identifier for this fee. Present when fetching a payment.
-          example: pyfee_xyz
-        type:
-          type: string
-          enum:
-          - processing_fee
-          - platform_fee
-          - refund_processing_fee
-          description: 'The type of fee:
-
-            - `processing_fee`: Fees related to payment processing costs
-
-            - `platform_fee`: Fees for your platform''s services
-
-            - `refund_processing_fee`: A processing fee charged when a refund is processed. Currently applies to CAD payments only.
-
-            '
-          example: processing_fee
-        amount:
-          type: integer
-          description: Fee amount in cents
-          example: 350
-        currency:
-          type: string
-          description: Currency of the fee amount. Present when fetching a payment.
-          enum:
-          - usd
-          - cad
-          example: usd
-        remaining_amount:
-          type: integer
-          description: Amount still available for refund in cents. Updates after each partial refund. Present when fetching a payment.
-          example: 350
-        source_configuration_id:
-          type:
-          - string
-          - 'null'
-          description: The public ID of the Standard Fee Configuration used to calculate this fee. Null when the fee was explicitly provided in the payment request rather than auto-calculated.
-          example: sfc_abc123
-        source_fee_type:
-          type:
-          - string
-          - 'null'
-          description: 'The fee type from the Standard Fee Configuration that generated this fee (e.g., `processing_ecomm`, `amex_brand_ecomm`, `platform`).
-
-            Null when the fee was explicitly provided in the payment request.
-
-            '
-          example: amex_brand_ecomm
-        refund_id:
-          type:
-          - string
-          - 'null'
-          description: The public ID of the refund this fee is associated with. Populated for `refund_processing_fee` fees (currently CAD payments only); null for all other fees. Present when fetching a payment.
-          example: re_xyz
-      required:
-      - type
-      - amount
     Card:
       type: object
       properties:
@@ -2041,6 +2166,25 @@ components:
           - pass
           - unavailable
           - unchecked
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
     Refund:
       type: object
       properties:
@@ -2109,91 +2253,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    ReturnedFeeResponse:
-      type: object
-      description: A returned fee object showing fee details returned to the merchant with a refund
-      properties:
-        id:
-          type: string
-          description: Unique identifier for this returned fee
-          example: rtfee_xyz
-        payment_fee_id:
-          type: string
-          description: Unique identifier for the original payment fee that was partially or fully returned
-          example: pyfee_abc
-        type:
-          type: string
-          enum:
-          - processing_fee
-          - platform_fee
-          description: 'The type of fee that was returned:
-
-            - `processing_fee`: Processing fee returned to merchant
-
-            - `platform_fee`: Platform fee returned to merchant
-
-            '
-          example: processing_fee
-        returned_amount:
-          type: integer
-          description: Amount returned to the merchant in cents
-          example: 175
-        original_amount:
-          type: integer
-          description: Original fee amount in cents from the payment
-          example: 350
-        currency:
-          type: string
-          description: Currency of the fee amounts
-          example: usd
-        remaining_amount:
-          type: integer
-          description: Amount still available for refund on the original payment fee in cents
-          example: 175
-      required:
-      - id
-      - payment_fee_id
-      - type
-      - returned_amount
-      - original_amount
-      - currency
-      - remaining_amount
-    PaymentError:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              description: error code if the payment fails
-              type: string
-              example: card_declined
-            decline_code:
-              description: decline code if the payment fails
-              type: string
-              example: do_not_retry
-            message:
-              description: text description of the error code
-              type: string
-              example: This card has been rejected. Please try a different card or payment method
-            network:
-              description: card network used for payment
-              type:
-              - string
-              - 'null'
-              example: MASTERCARD
-            network_error_category:
-              description: network error category code
-              type:
-              - string
-              - 'null'
-              example: '03'
-            network_error_code:
-              description: network error code
-              type:
-              - string
-              - 'null'
-              example: '504'
     Envelope:
       type: object
       properties:
@@ -2212,88 +2271,29 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-    PageInfo:
+    CardPaymentMethod:
       type: object
       properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    PaymentBalanceTransaction:
-      type: object
-      properties:
-        id:
-          description: unique payment balance transaction id
-          type: string
-          format: uuid
-          example: pbt_123xyz
-        amount:
-          description: payment balance transaction amount, in cents
-          type: number
-          example: 40145
-        balance:
-          description: balance amount of the payment balance transaction, in cents
-          type: number
-          example: 53550
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        financial_transaction_id:
-          description: id of the financial transaction associated with the payment balance transaction
-          type: string
-          format: uuid
-          example: ft_123xyz
-        payment_id:
-          description: id of the payment associated with the payment balance transaction
-          type: string
-          format: uuid
-          example: py_123xyz
-        payment_balance_txn_type:
-          description: type of the transaction object associated with the payment balance transaction
-          type: string
-          enum:
-          - payment
-          - payment_fee
-          - payout
-          - refund
-          - fee_refund
-          - dispute
-          - dispute_fee
-          - dispute_fee_refund
-          - dispute_refund
-          example: fee_refund
-        source_id:
-          description: id of the source object associated with the payment balance transaction
-          type: string
-          format: uuid
-          example: fee_123xyz
-        source_type:
-          description: type of the source object associated with the payment balance transaction
-          type: string
-          example: ApplicationFee
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
+        card:
+          $ref: '#/components/schemas/Card'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
   parameters:
     payment-method-id:
       in: query
@@ -2305,6 +2305,15 @@ components:
       description: 'filter records which are associated with a payment method.
 
         '
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     created-after:
       in: query
       name: created_after
@@ -2314,16 +2323,6 @@ components:
       required: false
       example: '2022-01-01T00:00:00Z'
       description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
-
-        '
-    void-id:
-      in: query
-      name: void_id
-      schema:
-        type: string
-      required: false
-      example: vo_123xyz
-      description: 'filter records which are associated with a void.
 
         '
     sub-account:
@@ -2346,22 +2345,16 @@ components:
       description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
 
         '
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
+    void-id:
+      in: query
+      name: void_id
       schema:
         type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
+      required: false
+      example: vo_123xyz
+      description: 'filter records which are associated with a void.
+
+        '
     authorization-header:
       in: header
       name: Authorization
@@ -2370,6 +2363,13 @@ components:
       required: true
       example: Bearer {access_token}
       description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
     created-before:
       in: query
       name: created_before
