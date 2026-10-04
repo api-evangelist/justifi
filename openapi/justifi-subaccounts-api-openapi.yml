@@ -218,6 +218,23 @@ components:
           type: string
           enum:
           - checking
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -237,6 +254,95 @@ components:
           description: the encoded id of the first record in the current list
           type: string
           example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    SubAccount:
+      type: object
+      properties:
+        id:
+          description: sub account id
+          type: string
+          format: uuid
+          example: acc_xyz
+        name:
+          description: sub account name
+          type: string
+          example: The Shire Haberdashery
+        account_type:
+          description: sub account type (live or test)
+          type: string
+          example: live
+        status:
+          description: sub account status
+          type: string
+          enum:
+          - created
+          - submitted
+          - information_needed
+          - rejected
+          - enabled
+          - disabled
+          - archived
+          example: enabled
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        platform_account_id:
+          description: id of associated platform account
+          type: string
+          format: uuid
+          example: acc_xyz
+        payout_account_id:
+          description: id of active payout bank account
+          type: string
+          format: uuid
+          example: ba_xyz
+        business_id:
+          description: id of associated business
+          type: string
+          format: uuid
+          example: biz_xyz
+        application_fee_rates:
+          type: array
+          description: list of associated application fee rates
+        processing_ready:
+          description: sub account ready for processing
+          type: boolean
+          example: false
+        payout_ready:
+          description: sub account ready for payouts
+          type: boolean
+          example: false
+        related_accounts:
+          description: when a live sub account is created, a related test account is automatically created; this provides both ids
+          type: object
+          properties:
+            live_account_id:
+              type: string
+              format: uuid
+              description: live sub account id (this will be nil if a sub account was created with test credentials)
+              example: acc_xyz
+            test_account_id:
+              type: string
+              format: uuid
+              description: test sub account id
+              example: acc_xyz
+        payments_activated_on:
+          description: date and time when the first successful payment was processed on this sub account
+          type:
+          - string
+          - 'null'
+          format: date-time
+          example: '2021-01-15T12:00:00Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
     Envelope:
       type: object
       properties:
@@ -328,112 +434,6 @@ components:
               description: null
               type: enum[standard expedited]
               example: standard
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    SubAccount:
-      type: object
-      properties:
-        id:
-          description: sub account id
-          type: string
-          format: uuid
-          example: acc_xyz
-        name:
-          description: sub account name
-          type: string
-          example: The Shire Haberdashery
-        account_type:
-          description: sub account type (live or test)
-          type: string
-          example: live
-        status:
-          description: sub account status
-          type: string
-          enum:
-          - created
-          - submitted
-          - information_needed
-          - rejected
-          - enabled
-          - disabled
-          - archived
-          example: enabled
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        platform_account_id:
-          description: id of associated platform account
-          type: string
-          format: uuid
-          example: acc_xyz
-        payout_account_id:
-          description: id of active payout bank account
-          type: string
-          format: uuid
-          example: ba_xyz
-        business_id:
-          description: id of associated business
-          type: string
-          format: uuid
-          example: biz_xyz
-        application_fee_rates:
-          type: array
-          description: list of associated application fee rates
-        processing_ready:
-          description: sub account ready for processing
-          type: boolean
-          example: false
-        payout_ready:
-          description: sub account ready for payouts
-          type: boolean
-          example: false
-        related_accounts:
-          description: when a live sub account is created, a related test account is automatically created; this provides both ids
-          type: object
-          properties:
-            live_account_id:
-              type: string
-              format: uuid
-              description: live sub account id (this will be nil if a sub account was created with test credentials)
-              example: acc_xyz
-            test_account_id:
-              type: string
-              format: uuid
-              description: test sub account id
-              example: acc_xyz
-        payments_activated_on:
-          description: date and time when the first successful payment was processed on this sub account
-          type:
-          - string
-          - 'null'
-          format: date-time
-          example: '2021-01-15T12:00:00Z'
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
   parameters:
     id-path:
       in: path

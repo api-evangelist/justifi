@@ -90,6 +90,23 @@ paths:
                       $ref: '#/components/schemas/BalanceTransaction'
 components:
   schemas:
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -234,23 +251,6 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
   parameters:
     id-path:
       in: path

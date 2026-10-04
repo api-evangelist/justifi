@@ -261,6 +261,23 @@ paths:
                         $ref: '#/components/schemas/StandardFeeConfiguration'
 components:
   schemas:
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -280,6 +297,24 @@ components:
           description: the encoded id of the first record in the current list
           type: string
           example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     StandardFeeConfiguration:
       type: object
       properties:
@@ -377,75 +412,13 @@ components:
           - 'null'
           format: date-time
           example: null
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
   parameters:
-    pagination-limit:
-      in: query
-      name: limit
-      description: the number of resources to retrieve
-      schema:
-        type: integer
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    pagination-after:
-      in: query
-      name: after_cursor
-      description: token to fetch the next page of a list
-      schema:
-        type: string
     pagination-before:
       in: query
       name: before_cursor
       description: token to fetch the previous page of a list
       schema:
         type: string
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
     idempotency-key-header:
       in: header
       name: Idempotency-Key
@@ -455,6 +428,33 @@ components:
       required: true
       example: my-request-123abc
       description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    pagination-limit:
+      in: query
+      name: limit
+      description: the number of resources to retrieve
+      schema:
+        type: integer
+    pagination-after:
+      in: query
+      name: after_cursor
+      description: token to fetch the next page of a list
+      schema:
+        type: string
 x-tagGroups:
 - name: Authorization
   tags:

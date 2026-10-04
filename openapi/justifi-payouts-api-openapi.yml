@@ -166,6 +166,23 @@ components:
           type: string
           enum:
           - checking
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -185,35 +202,6 @@ components:
           description: the encoded id of the first record in the current list
           type: string
           example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    PayoutCsvReport:
-      type: object
-      properties:
-        id:
-          description: unique payout id
-          type: string
-          example: po_xyz
-        csv_url:
-          description: url that links to downloadable CSV report for payout.
-          type: string
-          example: https://justifi-test-payouts-reports.s3.amazonaws.com/acc_1234lkj/po_23jdfi36dqhj.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
     Payout:
       type: object
       properties:
@@ -306,31 +294,36 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope-list:
+    PayoutCsvReport:
       type: object
       properties:
         id:
-          description: the object id
-          type: number
-          example: 1
+          description: unique payout id
+          type: string
+          example: po_xyz
+        csv_url:
+          description: url that links to downloadable CSV report for payout.
+          type: string
+          example: https://justifi-test-payouts-reports.s3.amazonaws.com/acc_1234lkj/po_23jdfi36dqhj.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
         type:
           description: the object type, or array of objects
           type: string
           example: account
         data:
-          description: the list of objects
-          type: array
+          description: the attributes for the object
+          type: object
         page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
+          description: information for cursor style pagination, is null for single records
+          type: null
   parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
     deposits-before:
       in: query
       name: deposits_before
@@ -353,23 +346,6 @@ components:
       description: 'filter records which deposit after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
 
         '
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     created-after:
       in: query
       name: created_after
@@ -381,6 +357,22 @@ components:
       description: 'filter records which were created after the date and time (UTC) specified. Dates without time specified will default to 00:00:00
 
         '
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
     created-before:
       in: query
       name: created_before
@@ -392,6 +384,14 @@ components:
       description: 'filter records which were created before the date and time (UTC) specified. Dates without time specified will default to 00:00:00
 
         '
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:

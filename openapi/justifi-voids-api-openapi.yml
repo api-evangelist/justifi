@@ -100,7 +100,55 @@ paths:
                       disputes: []
                     page_info: null
 components:
+  parameters:
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
   schemas:
+    BankAccountPaymentMethod:
+      type: object
+      properties:
+        bank_account:
+          $ref: '#/components/schemas/BankAccount'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
     FeeResponse:
       type: object
       description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
@@ -169,57 +217,24 @@ components:
       required:
       - type
       - amount
-    Card:
+    ApplicationFee:
       type: object
       properties:
         id:
-          description: unique card id
+          description: unique application fee id
           type: string
           format: uuid
-          example: pm_123xyz
-        acct_last_four:
-          description: last 4 digits of the card number
+          example: fee_123xyz
+        amount:
+          description: application fee amount, in cents
+          type: number
+          example: 150
+        currency:
           type: string
-          example: 4242
-        brand:
-          description: card brand or bank name
-          example: Visa
-        digital_wallet:
-          description: which digital wallet provider the card is tied to
-          type:
-          - string
-          - 'null'
           enum:
-          - apple_pay
-          - google_pay
-          - null
-          example: apple_pay
-        name:
-          description: card or account holder name
-          type:
-          - string
-          - 'null'
-          example: Amanda Kessel
-        token:
-          description: 'same value as unique card id; can be saved and used to process multiple
-
-            payments with the same card
-
-            '
-          example: pm_123xyz
-        month:
-          description: expiration date month
-          example: '5'
-        year:
-          description: expiration date year
-          example: '2042'
-        metadata:
-          type:
-          - object
-          - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this card
-          example: {}
+          - usd
+          - cad
+          example: usd
         created_at:
           type: string
           format: date-time
@@ -228,88 +243,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-        address_line1_check:
-          description: Result of the address line 1 verification check. `pass` — matches the cardholder's address on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no address was provided for verification.
-          type: string
-          example: unchecked
-          enum:
-          - fail
-          - pass
-          - unavailable
-          - unchecked
-        address_postal_code_check:
-          description: Result of the postal code verification check. `pass` — matches the cardholder's postal code on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no postal code was provided for verification.
-          type: string
-          example: unchecked
-          enum:
-          - fail
-          - pass
-          - unavailable
-          - unchecked
-    BankAccountPaymentMethod:
-      type: object
-      properties:
-        bank_account:
-          $ref: '#/components/schemas/BankAccount'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-    BankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account payment method id
-          type: string
-          format: uuid
-          example: pm_123xyz
-        account_owner_name:
-          description: account owner name
-          type: string
-          example: Lindsay Whalen
-        account_type:
-          description: type of account (checking, savings, etc.)
-          type: string
-          example: checking
-        bank_name:
-          description: bank name
-          type:
-          - string
-          - 'null'
-          example: Wells Fargo
-        acct_last_four:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        token:
-          description: 'same value as unique bank account id; can be saved and used to process multiple
-
-            payments with the same bank account
-
-            '
-          example: pm_123xyz
-        metadata:
-          type:
-          - object
-          - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example:
-            new: info
     CardPayment:
       type: object
       properties:
@@ -492,6 +425,106 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
+    CardPaymentMethod:
+      type: object
+      properties:
+        card:
+          $ref: '#/components/schemas/Card'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    Card:
+      type: object
+      properties:
+        id:
+          description: unique card id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        acct_last_four:
+          description: last 4 digits of the card number
+          type: string
+          example: 4242
+        brand:
+          description: card brand or bank name
+          example: Visa
+        digital_wallet:
+          description: which digital wallet provider the card is tied to
+          type:
+          - string
+          - 'null'
+          enum:
+          - apple_pay
+          - google_pay
+          - null
+          example: apple_pay
+        name:
+          description: card or account holder name
+          type:
+          - string
+          - 'null'
+          example: Amanda Kessel
+        token:
+          description: 'same value as unique card id; can be saved and used to process multiple
+
+            payments with the same card
+
+            '
+          example: pm_123xyz
+        month:
+          description: expiration date month
+          example: '5'
+        year:
+          description: expiration date year
+          example: '2042'
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this card
+          example: {}
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        address_line1_check:
+          description: Result of the address line 1 verification check. `pass` — matches the cardholder's address on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no address was provided for verification.
+          type: string
+          example: unchecked
+          enum:
+          - fail
+          - pass
+          - unavailable
+          - unchecked
+        address_postal_code_check:
+          description: Result of the postal code verification check. `pass` — matches the cardholder's postal code on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no postal code was provided for verification.
+          type: string
+          example: unchecked
+          enum:
+          - fail
+          - pass
+          - unavailable
+          - unchecked
     BankAccountPayment:
       type: object
       properties:
@@ -673,6 +706,59 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
+    TransactionHold:
+      type: object
+      properties:
+        id:
+          description: unique transaction hold id
+          type: string
+          example: th_123xyz
+        financial_transaction_id:
+          type: string
+          description: financial transaction id the transaction hold is associated to
+          format: uuid
+          example: ft_123xyz
+    BankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account payment method id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        account_owner_name:
+          description: account owner name
+          type: string
+          example: Lindsay Whalen
+        account_type:
+          description: type of account (checking, savings, etc.)
+          type: string
+          example: checking
+        bank_name:
+          description: bank name
+          type:
+          - string
+          - 'null'
+          example: Wells Fargo
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        token:
+          description: 'same value as unique bank account id; can be saved and used to process multiple
+
+            payments with the same bank account
+
+            '
+          example: pm_123xyz
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example:
+            new: info
     Envelope:
       type: object
       properties:
@@ -691,92 +777,6 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-    TransactionHold:
-      type: object
-      properties:
-        id:
-          description: unique transaction hold id
-          type: string
-          example: th_123xyz
-        financial_transaction_id:
-          type: string
-          description: financial transaction id the transaction hold is associated to
-          format: uuid
-          example: ft_123xyz
-    ApplicationFee:
-      type: object
-      properties:
-        id:
-          description: unique application fee id
-          type: string
-          format: uuid
-          example: fee_123xyz
-        amount:
-          description: application fee amount, in cents
-          type: number
-          example: 150
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    CardPaymentMethod:
-      type: object
-      properties:
-        card:
-          $ref: '#/components/schemas/Card'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
 x-tagGroups:
 - name: Authorization
   tags:

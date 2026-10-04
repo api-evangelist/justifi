@@ -83,6 +83,24 @@ paths:
                       $ref: '#/components/schemas/InsurancePolicy'
 components:
   schemas:
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     InsurancePolicy:
       type: object
       properties:
@@ -131,24 +149,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
   parameters:
     authorization-header:
       in: header

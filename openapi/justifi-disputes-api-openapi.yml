@@ -360,163 +360,6 @@ paths:
                       $ref: '#/components/schemas/Dispute'
 components:
   schemas:
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    DisputeResponse:
-      type: object
-      properties:
-        additional_statement:
-          type: string
-          description: any additional evidence or statements
-        cancellation_policy_disclosure:
-          type: string
-          description: an explanation of how and when the customer was shown your cancellation policy prior to purchase
-        cancellation_rebuttal:
-          type: string
-          description: a justification for why the customer’s subscription was not canceled
-        customer_billing_address:
-          type: string
-          description: the billing address provided by the customer
-        customer_email_address:
-          type: string
-          description: the email address of the customer
-        customer_name:
-          type: string
-          description: the name of the customer
-        customer_purchase_ip_address:
-          type: string
-          description: the IP address that the customer used when making the purchase
-        duplicate_charge_explanation:
-          type: string
-          description: an explanation of the difference between the disputed charge versus the prior charge that appears to be a duplicate
-        product_description:
-          type: string
-          description: a description of the product or service that was sold
-        refund_policy_disclosure:
-          type: string
-          description: documentation demonstrating that the customer was shown your refund policy prior to purchase
-        refund_refusal_explanation:
-          type: string
-          description: justification for why the customer is not entitled to a refund
-        service_date:
-          type: string
-          description: the date on which the customer received or began receiving the purchased service
-          example: '2024-10-31'
-        shipping_address:
-          type: string
-          description: the address to which a physical product was shipped
-        shipping_carrier:
-          type: string
-          description: the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, please separate them with commas
-        shipping_date:
-          type: string
-          description: the date on which a physical product began its route to the shipping address
-          example: '2024-10-31'
-        shipping_tracking_number:
-          type: string
-          description: the tracking number for a physical product. If multiple tracking numbers were generated for this purchase, please separate them with commas
-        duplicate_charge_original_payment_id:
-          type: string
-          description: the payment id for the prior charge which appears to be a duplicate of the disputed charge
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    DisputeEvidence:
-      type: object
-      properties:
-        id:
-          description: unique dispute evidence id
-          type: string
-          example: dpe_xyz
-        file_name:
-          type: string
-          example: receipt.pdf
-          description: dispute evidence file name
-        file_type:
-          type: string
-          description: dispute evidence file type
-          example: application/pdf
-          enum:
-          - image/jpeg
-          - image/png
-          - application/pdf
-          - application/zip
-          - application/x-zip-compressed
-        dispute_evidence_type:
-          type: string
-          description: dispute evidence type matching the file that will be uploaded
-          example: receipt
-          enum:
-          - cancellation_policy
-          - customer_communication
-          - customer_signature
-          - duplicate_charge_documentation
-          - receipt
-          - refund_policy
-          - service_documentation
-          - shipping_documentation
-          - uncategorized_file
-        status:
-          type: string
-          description: dispute evidence status
-          enum:
-          - pending
-          - uploaded
-        description:
-          type: string
-          description: description of the dispute evidence file that will be uploaded
-        presigned_url:
-          type: string
-          description: url that should be used to submit a put request to upload the evidence file
     Dispute:
       type: object
       properties:
@@ -594,7 +437,173 @@ components:
               type: string
               format: date-time
               example: '2021-01-01T12:00:00Z'
+    DisputeResponse:
+      type: object
+      properties:
+        additional_statement:
+          type: string
+          description: any additional evidence or statements
+        cancellation_policy_disclosure:
+          type: string
+          description: an explanation of how and when the customer was shown your cancellation policy prior to purchase
+        cancellation_rebuttal:
+          type: string
+          description: a justification for why the customer’s subscription was not canceled
+        customer_billing_address:
+          type: string
+          description: the billing address provided by the customer
+        customer_email_address:
+          type: string
+          description: the email address of the customer
+        customer_name:
+          type: string
+          description: the name of the customer
+        customer_purchase_ip_address:
+          type: string
+          description: the IP address that the customer used when making the purchase
+        duplicate_charge_explanation:
+          type: string
+          description: an explanation of the difference between the disputed charge versus the prior charge that appears to be a duplicate
+        product_description:
+          type: string
+          description: a description of the product or service that was sold
+        refund_policy_disclosure:
+          type: string
+          description: documentation demonstrating that the customer was shown your refund policy prior to purchase
+        refund_refusal_explanation:
+          type: string
+          description: justification for why the customer is not entitled to a refund
+        service_date:
+          type: string
+          description: the date on which the customer received or began receiving the purchased service
+          example: '2024-10-31'
+        shipping_address:
+          type: string
+          description: the address to which a physical product was shipped
+        shipping_carrier:
+          type: string
+          description: the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, please separate them with commas
+        shipping_date:
+          type: string
+          description: the date on which a physical product began its route to the shipping address
+          example: '2024-10-31'
+        shipping_tracking_number:
+          type: string
+          description: the tracking number for a physical product. If multiple tracking numbers were generated for this purchase, please separate them with commas
+        duplicate_charge_original_payment_id:
+          type: string
+          description: the payment id for the prior charge which appears to be a duplicate of the disputed charge
+    DisputeEvidence:
+      type: object
+      properties:
+        id:
+          description: unique dispute evidence id
+          type: string
+          example: dpe_xyz
+        file_name:
+          type: string
+          example: receipt.pdf
+          description: dispute evidence file name
+        file_type:
+          type: string
+          description: dispute evidence file type
+          example: application/pdf
+          enum:
+          - image/jpeg
+          - image/png
+          - application/pdf
+          - application/zip
+          - application/x-zip-compressed
+        dispute_evidence_type:
+          type: string
+          description: dispute evidence type matching the file that will be uploaded
+          example: receipt
+          enum:
+          - cancellation_policy
+          - customer_communication
+          - customer_signature
+          - duplicate_charge_documentation
+          - receipt
+          - refund_policy
+          - service_documentation
+          - shipping_documentation
+          - uncategorized_file
+        status:
+          type: string
+          description: dispute evidence status
+          enum:
+          - pending
+          - uploaded
+        description:
+          type: string
+          description: description of the dispute evidence file that will be uploaded
+        presigned_url:
+          type: string
+          description: url that should be used to submit a put request to upload the evidence file
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
   parameters:
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     id-path:
       in: path
       name: id
@@ -610,15 +619,6 @@ components:
       required: true
       example: Bearer {access_token}
       description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
     sub-account:
       in: header
       name: Sub-Account

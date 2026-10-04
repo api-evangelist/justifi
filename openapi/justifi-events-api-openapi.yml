@@ -548,903 +548,6 @@ webhooks:
       description: JustiFi API
 components:
   schemas:
-    FeeResponse:
-      type: object
-      description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
-
-        subscribe to payment webhook events (recommended) to receive the full fee objects, or poll with a subsequent Get Payment request.
-
-        '
-      properties:
-        id:
-          type: string
-          description: Unique identifier for this fee. Present when fetching a payment.
-          example: pyfee_xyz
-        type:
-          type: string
-          enum:
-          - processing_fee
-          - platform_fee
-          - refund_processing_fee
-          description: 'The type of fee:
-
-            - `processing_fee`: Fees related to payment processing costs
-
-            - `platform_fee`: Fees for your platform''s services
-
-            - `refund_processing_fee`: A processing fee charged when a refund is processed. Currently applies to CAD payments only.
-
-            '
-          example: processing_fee
-        amount:
-          type: integer
-          description: Fee amount in cents
-          example: 350
-        currency:
-          type: string
-          description: Currency of the fee amount. Present when fetching a payment.
-          enum:
-          - usd
-          - cad
-          example: usd
-        remaining_amount:
-          type: integer
-          description: Amount still available for refund in cents. Updates after each partial refund. Present when fetching a payment.
-          example: 350
-        source_configuration_id:
-          type:
-          - string
-          - 'null'
-          description: The public ID of the Standard Fee Configuration used to calculate this fee. Null when the fee was explicitly provided in the payment request rather than auto-calculated.
-          example: sfc_abc123
-        source_fee_type:
-          type:
-          - string
-          - 'null'
-          description: 'The fee type from the Standard Fee Configuration that generated this fee (e.g., `processing_ecomm`, `amex_brand_ecomm`, `platform`).
-
-            Null when the fee was explicitly provided in the payment request.
-
-            '
-          example: amex_brand_ecomm
-        refund_id:
-          type:
-          - string
-          - 'null'
-          description: The public ID of the refund this fee is associated with. Populated for `refund_processing_fee` fees (currently CAD payments only); null for all other fees. Present when fetching a payment.
-          example: re_xyz
-      required:
-      - type
-      - amount
-    ReportPayoutParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - payout
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    DisputeResponse:
-      type: object
-      properties:
-        additional_statement:
-          type: string
-          description: any additional evidence or statements
-        cancellation_policy_disclosure:
-          type: string
-          description: an explanation of how and when the customer was shown your cancellation policy prior to purchase
-        cancellation_rebuttal:
-          type: string
-          description: a justification for why the customer’s subscription was not canceled
-        customer_billing_address:
-          type: string
-          description: the billing address provided by the customer
-        customer_email_address:
-          type: string
-          description: the email address of the customer
-        customer_name:
-          type: string
-          description: the name of the customer
-        customer_purchase_ip_address:
-          type: string
-          description: the IP address that the customer used when making the purchase
-        duplicate_charge_explanation:
-          type: string
-          description: an explanation of the difference between the disputed charge versus the prior charge that appears to be a duplicate
-        product_description:
-          type: string
-          description: a description of the product or service that was sold
-        refund_policy_disclosure:
-          type: string
-          description: documentation demonstrating that the customer was shown your refund policy prior to purchase
-        refund_refusal_explanation:
-          type: string
-          description: justification for why the customer is not entitled to a refund
-        service_date:
-          type: string
-          description: the date on which the customer received or began receiving the purchased service
-          example: '2024-10-31'
-        shipping_address:
-          type: string
-          description: the address to which a physical product was shipped
-        shipping_carrier:
-          type: string
-          description: the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, please separate them with commas
-        shipping_date:
-          type: string
-          description: the date on which a physical product began its route to the shipping address
-          example: '2024-10-31'
-        shipping_tracking_number:
-          type: string
-          description: the tracking number for a physical product. If multiple tracking numbers were generated for this purchase, please separate them with commas
-        duplicate_charge_original_payment_id:
-          type: string
-          description: the payment id for the prior charge which appears to be a duplicate of the disputed charge
-    ReportInterchangeFeeParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - interchange_fee
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    ApplicationFee:
-      type: object
-      properties:
-        id:
-          description: unique application fee id
-          type: string
-          format: uuid
-          example: fee_123xyz
-        amount:
-          description: application fee amount, in cents
-          type: number
-          example: 150
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    CheckoutCompletion:
-      type: object
-      properties:
-        id:
-          description: unique checkout completion id
-          type: string
-          example: chc_xyz
-        payment_mode:
-          type: string
-          example: ecom
-          enum:
-          - ecom
-          - bnpl
-          - card_present
-        payment_token:
-          type: string
-          example: pm_xyz123
-          description: the payment method token used to process the payment, only for ecom payments
-        status:
-          type: string
-          enum:
-          - succeeded
-          - failed
-          - processing
-          example: succeeded
-          description: the status of the completion, only succeeded or failed
-        payment_status:
-          type: string
-          enum:
-          - succeeded
-          - failed
-          - pending
-          - canceled
-          - skipped
-          example: succeeded
-          description: depending upon payment mode, the status of the payment API call, bnpl transaction, or card reader transaction.
-        payment_error_code:
-          type: string
-          example: card_declined
-          description: when payment fails, related error code
-        payment_error_description:
-          type: string
-          example: Your card was declined
-          description: when payment fails, related error description
-        payment_response:
-          allOf:
-          - type: object
-          - description: payment object if completion attempt was successful, error object if not successful
-          - $ref: '#/components/schemas/CardPaymentWithEnvelope'
-        checkout_id:
-          type: string
-          format: uuid
-          description: id of the checkout for this completion
-          example: cho_xyz123
-        additional_transactions:
-          type: array of objects
-          description: legacy attribute, other transactions processed during checkout completion. For example, insurance payments
-        checkout:
-          $ref: '#/components/schemas/Checkout'
-        payment_id:
-          type: string
-          format: uuid
-          example: py_xyz123
-          description: id of the payment associated with this checkout, when successful
-        payment_method_id:
-          type: string
-          format: uuid
-          example: pm_xyz123
-          description: id of the payment associated with this checkout, when successful
-        terminal_id:
-          type: string
-          format: uuid
-          example: trm_xyz123
-          description: id of the terminal used for this checkout, when mode is card present
-        created_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-    PaymentSetting:
-      type: object
-      properties:
-        id:
-          description: unique payment setting id
-          type: string
-          example: stpy_123abc
-        account_id:
-          description: unique id of the associated account
-          type: string
-          example: acc_123abc
-        mcc_code:
-          description: merchant category code configured
-          type: string
-          example: '5045'
-        credit_card_payments:
-          description: credit card payments enabled for processing
-          type: boolean
-          example: true
-        ach_payments:
-          description: ach payments enabled for processing
-          type: boolean
-          example: true
-        card_present:
-          description: card present feature enabled for processing
-          type: boolean
-          example: false
-        bnpl_payments:
-          description: buy now pay later feature enabled
-          type: boolean
-          example: false
-        insurance_payments:
-          description: insurance feature enabled
-          type: boolean
-          example: false
-        platform_wallet_account:
-          description: wether this account is configured as platform_wallet_account
-          type: boolean
-          example: false
-    DisputeEvidence:
-      type: object
-      properties:
-        id:
-          description: unique dispute evidence id
-          type: string
-          example: dpe_xyz
-        file_name:
-          type: string
-          example: receipt.pdf
-          description: dispute evidence file name
-        file_type:
-          type: string
-          description: dispute evidence file type
-          example: application/pdf
-          enum:
-          - image/jpeg
-          - image/png
-          - application/pdf
-          - application/zip
-          - application/x-zip-compressed
-        dispute_evidence_type:
-          type: string
-          description: dispute evidence type matching the file that will be uploaded
-          example: receipt
-          enum:
-          - cancellation_policy
-          - customer_communication
-          - customer_signature
-          - duplicate_charge_documentation
-          - receipt
-          - refund_policy
-          - service_documentation
-          - shipping_documentation
-          - uncategorized_file
-        status:
-          type: string
-          description: dispute evidence status
-          enum:
-          - pending
-          - uploaded
-        description:
-          type: string
-          description: description of the dispute evidence file that will be uploaded
-        presigned_url:
-          type: string
-          description: url that should be used to submit a put request to upload the evidence file
-    Fee:
-      type: object
-      description: A fee object specifying type and amount
-      properties:
-        type:
-          type: string
-          enum:
-          - processing_fee
-          - platform_fee
-          description: 'The type of fee:
-
-            - `processing_fee`: Fees related to payment processing costs
-
-            - `platform_fee`: Fees for your platform''s services
-
-            '
-          example: processing_fee
-        amount:
-          type: integer
-          description: Fee amount in cents
-          example: 350
-      required:
-      - type
-      - amount
-    BankAccountPaymentMethod:
-      type: object
-      properties:
-        bank_account:
-          $ref: '#/components/schemas/BankAccount'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
-    Event:
-      type: object
-      properties:
-        id:
-          description: event unique id
-          type: string
-          example: evt_123xyz
-        idempotency_key:
-          description: idempotency key for request, when available
-          type:
-          - string
-          - 'null'
-        request_id:
-          description: id for request, when available
-          type:
-          - string
-          - 'null'
-        account_id:
-          description: sub account id for event
-          type: string
-          example: acc_123xyz
-        account_type:
-          description: live or test account
-          type: string
-          example: test
-        platform_account_id:
-          description: platform account id for event, when available
-          type:
-          - string
-          - 'null'
-          example: acc_123xyz
-        data:
-          description: the attributes for the object
-          type: object
-        version:
-          description: version of the event payload
-          type: string
-          example: v1
-        event_name:
-          description: name of the event (payment.succeeded, sub_account.updated, etc.)
-          example: payment.succeeded
-          type: string
-    ReportProceedsParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - proceeds
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    TerminalsOrder:
-      type: object
-      properties:
-        id:
-          description: unique terminal order id
-          type: string
-          example: tord_xyz
-        business_id:
-          type: string
-          format: uuid
-          example: biz_xyz
-        account_id:
-          type: string
-          format: uuid
-          example: acc_xyz
-        order_type:
-          type: string
-          enum:
-          - boarding_only
-          - boarding_shipping
-          example: boarding_only
-        order_status:
-          type: string
-          enum:
-          - created
-          - submitted
-          - in_progress
-          - completed
-          - on_hold
-          - canceled
-          description: status of the order
-        company_name:
-          type: string
-          description: business legal name when the terminal order was created
-          example: Business Name
-        mcc:
-          type: string
-          description: Merchant Category Code
-          example: 7998
-        receiver_name:
-          type: string
-          description: name of the person receiving the terminal
-          example: John Doe
-        contact_first_name:
-          type: string
-          description: company's representative first name
-          example: John
-        contact_last_name:
-          type: string
-          description: company's representative last name
-          example: Doe
-        contact_email:
-          type: string
-          description: company's contact email
-          example: john.doe@example.com
-        contact_phone_number:
-          type: string
-          description: company's contact phone number
-          example: 2125554567
-        line1:
-          type: string
-          example: 123 Main St
-        line2:
-          type: string
-          example: Apt 4B
-        city:
-          type: string
-          example: Minneapolis
-        state:
-          type: string
-          example: MN
-        postal_code:
-          type: string
-          example: 55401
-        time_zone:
-          type: string
-          description: determined by postal code
-          example: US/Central
-        country:
-          type: string
-          example: USA
-        shipping_tracking_reference:
-          type: string
-          description: FedEx tracking number associated with the terminal order shipment. This field is populated only when the terminal order status is completed and the order includes a physical shipment. Always null for boarding_only terminal orders, as no shipment occurs.
-          example: 12345678
-        created_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2024-01-01T12:00:00Z'
-        terminals:
-          type: array
-          description: list of ordered terminals
-          items:
-            type: object
-            properties:
-              terminal_id:
-                type: string
-                format: uuid
-                description: unique terminal id
-                example: tmn_abc
-              terminal_did:
-                type: string
-                description: terminal device identification
-                example: '12345678'
-              model_name:
-                type: string
-                enum:
-                - V400m
-                - P400
-                - E285
-                example: V400m
-    ApplicationFeeRate:
-      type: object
-      properties:
-        id:
-          description: unique application fee rate id
-          type: string
-          format: uuid
-          example: afr_123xyz
-        transaction_fee:
-          description: transaction fee amount, in cents
-          type: number
-          example: 50
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        basis_point_rate:
-          description: variable percentage of the payment amount that, combined with transaction fee, will be charged as the application fee. Expressed as the number of basis points
-          type: number
-          example: 250
-        rate_type:
-          type: string
-          enum:
-          - cc
-          - ach
-          example: cc
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        effective_start:
-          description: date and time (UTC) application fee rate went into effect
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        effective_end:
-          description: date and time (UTC) application fee rate is effectively archived. If null, no end date is currently assigned and application fee rate is currently effective
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    BankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account payment method id
-          type: string
-          format: uuid
-          example: pm_123xyz
-        account_owner_name:
-          description: account owner name
-          type: string
-          example: Lindsay Whalen
-        account_type:
-          description: type of account (checking, savings, etc.)
-          type: string
-          example: checking
-        bank_name:
-          description: bank name
-          type:
-          - string
-          - 'null'
-          example: Wells Fargo
-        acct_last_four:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        token:
-          description: 'same value as unique bank account id; can be saved and used to process multiple
-
-            payments with the same bank account
-
-            '
-          example: pm_123xyz
-        metadata:
-          type:
-          - object
-          - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example:
-            new: info
-    ReportType:
-      description: which report was generated
-      type: string
-      example: proceeds
-      enum:
-      - proceeds
-      - payout
-      - interchange_fee
-      - sub_account_summary
-      - payment_list
-    BankAccountPayment:
-      type: object
-      properties:
-        id:
-          description: unique payment id
-          type: string
-          example: py_xyz
-        account_id:
-          type: string
-          format: uuid
-          example: acc_xyz
-        amount:
-          description: payment amount in cents
-          type: number
-          example: 10000
-        amount_disputed:
-          description: sum of open or lost disputes for this payment, in cents
-          type: number
-          example: 0
-        amount_refunded:
-          description: sum of refunds for this payment, in cents
-          type: number
-          example: 0
-        amount_refundable:
-          description: amount of this payment currently able to be refunded, in cents
-          type: number
-          example: 10000
-        balance:
-          description: sum of debits and credits for this payment, in cents (reflects the amount this account has earned from this payment). Compiled and calculated value, eventually consistent. To see all changes affecting the payment's balance see [Get Balance Transactions](#operation/GetPaymentBalanceTransactions)
-          type: number
-          example: 99850
-        fee_amount:
-          type: number
-          description: sum of fees for this payment
-          example: 150
-        financial_transaction_id:
-          type: string
-          description: associated financial transaction id
-          example: ft_123xyz
-        captured:
-          description: whether or not this payment is captured
-          type: boolean
-          example: true
-        capture_strategy:
-          type: string
-          example: automatic
-          enum:
-          - automatic
-          - manual
-        currency:
-          type: string
-          enum:
-          - usd
-          example: usd
-        description:
-          type: string
-          description: your meaningful description of the payment (e.g. an order number or other value from your system)
-          example: my_order_xyz
-        disputed:
-          type: boolean
-          description: whether or not this payment has any open or lost disputes
-          example: false
-        disputes:
-          type: array
-          description: list of associated disputes
-          example: []
-        error_code:
-          type: string
-          description: error code if the payment fails
-          example: credit_card_number_invalid
-        error_description:
-          type: string
-          description: text description of the error code
-          example: Credit Card Number Invalid (Failed LUHN checksum)
-        is_test:
-          type: boolean
-          description: whether or not this payment was made using the test account
-          example: true
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this payment
-          example: {}
-        payment_intent_id:
-          type: string
-          description: unique id of associated payment intent
-          example: pi_123xyz
-        checkout_id:
-          type: string
-          description: unique id of associated checkout
-          example: cho_123
-        payment_method:
-          $ref: '#/components/schemas/BankAccountPaymentMethod'
-        application_fee:
-          $ref: '#/components/schemas/ApplicationFee'
-        application_fee_rate_id:
-          type: string
-          description: unique id of application fee rate applied to this payment, if any
-          example: afr_123xyz
-        fees:
-          type: array
-          description: 'Array of fee objects showing the fees charged on this payment with their remaining refundable amounts.
-
-            Populated whether the fees were provided via the `fees` array in the payment request or calculated automatically (for example, from a Standard Fee Configuration).
-
-
-            **Note:** This array is empty in the Create Payment response. Fees are processed asynchronously —
-
-            subscribe to payment webhook events (recommended) to receive the full fee objects
-
-            (with `id`, `remaining_amount`, and `currency`), or poll with a subsequent Get Payment request.
-
-
-            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
-
-            '
-          items:
-            $ref: '#/components/schemas/FeeResponse'
-          example:
-          - id: pyfee_abc
-            type: processing_fee
-            amount: 50
-            currency: usd
-            remaining_amount: 50
-            source_configuration_id: sfc_abc123
-            source_fee_type: processing_ecomm
-            refund_id: null
-          - id: pyfee_xyz
-            type: platform_fee
-            amount: 150
-            currency: usd
-            remaining_amount: 150
-            source_configuration_id: sfc_abc123
-            source_fee_type: platform
-            refund_id: null
-        refunded:
-          type: boolean
-          description: whether or not this payment has any refunds
-          example: false
-        status:
-          type: string
-          enum:
-          - pending
-          - authorized
-          - canceled
-          - succeeded
-          - failed
-          - partially_refunded
-          - fully_refunded
-          - disputed
-          description: status of the payment
-        payment_mode:
-          type: string
-          example: ecom
-          enum:
-          - ecom
-          - ach
-          - card_present
-        terminal_id:
-          type: string
-          description: id of terminal used to process a card payment, null for bank account payments
-          example: trm_123xyz
-        transaction_hold:
-          allOf:
-          - type: object
-          - description: present when the payment has been flagged for review and held from payouts
-          - $ref: '#/components/schemas/TransactionHold'
-        expedited:
-          type:
-          - boolean
-          - 'null'
-          description: settlement priority of the payment, only applies to ACH payments
-          example: true
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    TransactionHold:
-      type: object
-      properties:
-        id:
-          description: unique transaction hold id
-          type: string
-          example: th_123xyz
-        financial_transaction_id:
-          type: string
-          description: financial transaction id the transaction hold is associated to
-          format: uuid
-          example: ft_123xyz
-    CardPaymentWithEnvelope:
-      type: object
-      properties:
-        id:
-          description: unique payment id, same as id in data object
-          type: string
-          example: py_xyz
-        type:
-          description: the object type
-          type: string
-          example: payment
-        data:
-          $ref: '#/components/schemas/CardPayment'
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
     Dispute:
       type: object
       properties:
@@ -1522,104 +625,22 @@ components:
               type: string
               format: date-time
               example: '2021-01-01T12:00:00Z'
-    ReportPaymentListParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - payment_list
-        payment_status:
-          description: the payment status to filter by
-          type: string
-          enum:
-          - authorized
-          - failed
-          - succeeded
-          - canceled
-          example: succeeded
-        payment_method_id:
-          description: the payment method id to filter by
-          type: string
-          example: pm_xyz
-        terminal_id:
-          description: the terminal_id to filter by
-          type: string
-          example: trm_xyz
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    Report:
+    CardPaymentWithEnvelope:
       type: object
       properties:
         id:
-          description: report unique id
+          description: unique payment id, same as id in data object
           type: string
-          example: rpt_xyz
-        report_type:
-          $ref: '#/components/schemas/ReportType'
-        nickname:
-          description: the report nickname
-          type:
-          - string
-          - 'null'
-          example: My Report
-        status:
-          description: the report status
+          example: py_xyz
+        type:
+          description: the object type
           type: string
-          example: scheduled
-          enum:
-          - scheduled
-          - processing
-          - completed
-          - failed
-          - canceled
-          - expired
-        scheduled_at:
-          description: when the report was scheduled
-          type: string
-          format: date
-          example: '2025-12-25T14:44:45.026Z'
-        run_at:
-          description: when the report started processing
-          type: string
-          format: date
-          example: '2025-12-30T14:44:45.026Z'
-        created_at:
-          description: when the report was created
-          type: string
-          format: date
-          example: '2025-12-31T14:44:45.026Z'
-        error_description:
-          description: error description in case of errors
-          type: string
-        account_id:
-          description: the account id the report was created for
-          type: string
-          example: acc_xyz
-        presigned_url:
-          description: the url to download the report when completed
-          type: string
-          format: url
-        platform_account_id:
-          description: the platform account id the report was created for
-          type: string
-          example: acc_xyz
-        parameters:
-          $ref: '#/components/schemas/ReportParameters'
+          example: payment
+        data:
+          $ref: '#/components/schemas/CardPayment'
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     ReturnedFeeResponse:
       type: object
       description: A returned fee object showing fee details returned to the merchant with a refund
@@ -1851,29 +872,570 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    PayoutSetting:
+    ReportParameters:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/ReportProceedsParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportPayoutParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportInterchangeFeeParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportSubAccountSummaryParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+      - allOf:
+        - $ref: '#/components/schemas/ReportPaymentListParameters'
+        - type: object
+          properties:
+            account_id:
+              type: string
+              example: acc_xyz
+            platform_account_id:
+              type: string
+              example: acc_xyz
+    BankAccountPayment:
       type: object
       properties:
-        public_id:
-          description: unique payout setting id
+        id:
+          description: unique payment id
           type: string
-          example: stpo_213abc
+          example: py_xyz
         account_id:
-          description: unique id of the associated account
           type: string
-          example: acc_123abc
-        enabled:
-          description: whether the payout setting is currently enabled
+          format: uuid
+          example: acc_xyz
+        amount:
+          description: payment amount in cents
+          type: number
+          example: 10000
+        amount_disputed:
+          description: sum of open or lost disputes for this payment, in cents
+          type: number
+          example: 0
+        amount_refunded:
+          description: sum of refunds for this payment, in cents
+          type: number
+          example: 0
+        amount_refundable:
+          description: amount of this payment currently able to be refunded, in cents
+          type: number
+          example: 10000
+        balance:
+          description: sum of debits and credits for this payment, in cents (reflects the amount this account has earned from this payment). Compiled and calculated value, eventually consistent. To see all changes affecting the payment's balance see [Get Balance Transactions](#operation/GetPaymentBalanceTransactions)
+          type: number
+          example: 99850
+        fee_amount:
+          type: number
+          description: sum of fees for this payment
+          example: 150
+        financial_transaction_id:
+          type: string
+          description: associated financial transaction id
+          example: ft_123xyz
+        captured:
+          description: whether or not this payment is captured
           type: boolean
           example: true
-        interval:
-          description: payout frequency
+        capture_strategy:
           type: string
-          example: daily
-        statement_descriptor:
-          description: custom text to appear on bank statements
+          example: automatic
+          enum:
+          - automatic
+          - manual
+        currency:
           type: string
-          example: Name of Account
+          enum:
+          - usd
+          example: usd
+        description:
+          type: string
+          description: your meaningful description of the payment (e.g. an order number or other value from your system)
+          example: my_order_xyz
+        disputed:
+          type: boolean
+          description: whether or not this payment has any open or lost disputes
+          example: false
+        disputes:
+          type: array
+          description: list of associated disputes
+          example: []
+        error_code:
+          type: string
+          description: error code if the payment fails
+          example: credit_card_number_invalid
+        error_description:
+          type: string
+          description: text description of the error code
+          example: Credit Card Number Invalid (Failed LUHN checksum)
+        is_test:
+          type: boolean
+          description: whether or not this payment was made using the test account
+          example: true
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this payment
+          example: {}
+        payment_intent_id:
+          type: string
+          description: unique id of associated payment intent
+          example: pi_123xyz
+        checkout_id:
+          type: string
+          description: unique id of associated checkout
+          example: cho_123
+        payment_method:
+          $ref: '#/components/schemas/BankAccountPaymentMethod'
+        application_fee:
+          $ref: '#/components/schemas/ApplicationFee'
+        application_fee_rate_id:
+          type: string
+          description: unique id of application fee rate applied to this payment, if any
+          example: afr_123xyz
+        fees:
+          type: array
+          description: 'Array of fee objects showing the fees charged on this payment with their remaining refundable amounts.
+
+            Populated whether the fees were provided via the `fees` array in the payment request or calculated automatically (for example, from a Standard Fee Configuration).
+
+
+            **Note:** This array is empty in the Create Payment response. Fees are processed asynchronously —
+
+            subscribe to payment webhook events (recommended) to receive the full fee objects
+
+            (with `id`, `remaining_amount`, and `currency`), or poll with a subsequent Get Payment request.
+
+
+            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
+
+            '
+          items:
+            $ref: '#/components/schemas/FeeResponse'
+          example:
+          - id: pyfee_abc
+            type: processing_fee
+            amount: 50
+            currency: usd
+            remaining_amount: 50
+            source_configuration_id: sfc_abc123
+            source_fee_type: processing_ecomm
+            refund_id: null
+          - id: pyfee_xyz
+            type: platform_fee
+            amount: 150
+            currency: usd
+            remaining_amount: 150
+            source_configuration_id: sfc_abc123
+            source_fee_type: platform
+            refund_id: null
+        refunded:
+          type: boolean
+          description: whether or not this payment has any refunds
+          example: false
+        status:
+          type: string
+          enum:
+          - pending
+          - authorized
+          - canceled
+          - succeeded
+          - failed
+          - partially_refunded
+          - fully_refunded
+          - disputed
+          description: status of the payment
+        payment_mode:
+          type: string
+          example: ecom
+          enum:
+          - ecom
+          - ach
+          - card_present
+        terminal_id:
+          type: string
+          description: id of terminal used to process a card payment, null for bank account payments
+          example: trm_123xyz
+        transaction_hold:
+          allOf:
+          - type: object
+          - description: present when the payment has been flagged for review and held from payouts
+          - $ref: '#/components/schemas/TransactionHold'
+        expedited:
+          type:
+          - boolean
+          - 'null'
+          description: settlement priority of the payment, only applies to ACH payments
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    ReportType:
+      description: which report was generated
+      type: string
+      example: proceeds
+      enum:
+      - proceeds
+      - payout
+      - interchange_fee
+      - sub_account_summary
+      - payment_list
+    FeeResponse:
+      type: object
+      description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
+
+        subscribe to payment webhook events (recommended) to receive the full fee objects, or poll with a subsequent Get Payment request.
+
+        '
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this fee. Present when fetching a payment.
+          example: pyfee_xyz
+        type:
+          type: string
+          enum:
+          - processing_fee
+          - platform_fee
+          - refund_processing_fee
+          description: 'The type of fee:
+
+            - `processing_fee`: Fees related to payment processing costs
+
+            - `platform_fee`: Fees for your platform''s services
+
+            - `refund_processing_fee`: A processing fee charged when a refund is processed. Currently applies to CAD payments only.
+
+            '
+          example: processing_fee
+        amount:
+          type: integer
+          description: Fee amount in cents
+          example: 350
+        currency:
+          type: string
+          description: Currency of the fee amount. Present when fetching a payment.
+          enum:
+          - usd
+          - cad
+          example: usd
+        remaining_amount:
+          type: integer
+          description: Amount still available for refund in cents. Updates after each partial refund. Present when fetching a payment.
+          example: 350
+        source_configuration_id:
+          type:
+          - string
+          - 'null'
+          description: The public ID of the Standard Fee Configuration used to calculate this fee. Null when the fee was explicitly provided in the payment request rather than auto-calculated.
+          example: sfc_abc123
+        source_fee_type:
+          type:
+          - string
+          - 'null'
+          description: 'The fee type from the Standard Fee Configuration that generated this fee (e.g., `processing_ecomm`, `amex_brand_ecomm`, `platform`).
+
+            Null when the fee was explicitly provided in the payment request.
+
+            '
+          example: amex_brand_ecomm
+        refund_id:
+          type:
+          - string
+          - 'null'
+          description: The public ID of the refund this fee is associated with. Populated for `refund_processing_fee` fees (currently CAD payments only); null for all other fees. Present when fetching a payment.
+          example: re_xyz
+      required:
+      - type
+      - amount
+    ApplicationFeeRate:
+      type: object
+      properties:
+        id:
+          description: unique application fee rate id
+          type: string
+          format: uuid
+          example: afr_123xyz
+        transaction_fee:
+          description: transaction fee amount, in cents
+          type: number
+          example: 50
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        basis_point_rate:
+          description: variable percentage of the payment amount that, combined with transaction fee, will be charged as the application fee. Expressed as the number of basis points
+          type: number
+          example: 250
+        rate_type:
+          type: string
+          enum:
+          - cc
+          - ach
+          example: cc
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        effective_start:
+          description: date and time (UTC) application fee rate went into effect
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        effective_end:
+          description: date and time (UTC) application fee rate is effectively archived. If null, no end date is currently assigned and application fee rate is currently effective
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    Event:
+      type: object
+      properties:
+        id:
+          description: event unique id
+          type: string
+          example: evt_123xyz
+        idempotency_key:
+          description: idempotency key for request, when available
+          type:
+          - string
+          - 'null'
+        request_id:
+          description: id for request, when available
+          type:
+          - string
+          - 'null'
+        account_id:
+          description: sub account id for event
+          type: string
+          example: acc_123xyz
+        account_type:
+          description: live or test account
+          type: string
+          example: test
+        platform_account_id:
+          description: platform account id for event, when available
+          type:
+          - string
+          - 'null'
+          example: acc_123xyz
+        data:
+          description: the attributes for the object
+          type: object
+        version:
+          description: version of the event payload
+          type: string
+          example: v1
+        event_name:
+          description: name of the event (payment.succeeded, sub_account.updated, etc.)
+          example: payment.succeeded
+          type: string
+    ReportPayoutParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - payout
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    TransactionHold:
+      type: object
+      properties:
+        id:
+          description: unique transaction hold id
+          type: string
+          example: th_123xyz
+        financial_transaction_id:
+          type: string
+          description: financial transaction id the transaction hold is associated to
+          format: uuid
+          example: ft_123xyz
+    BankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account payment method id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        account_owner_name:
+          description: account owner name
+          type: string
+          example: Lindsay Whalen
+        account_type:
+          description: type of account (checking, savings, etc.)
+          type: string
+          example: checking
+        bank_name:
+          description: bank name
+          type:
+          - string
+          - 'null'
+          example: Wells Fargo
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        token:
+          description: 'same value as unique bank account id; can be saved and used to process multiple
+
+            payments with the same bank account
+
+            '
+          example: pm_123xyz
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example:
+            new: info
+    SubAccount:
+      type: object
+      properties:
+        id:
+          description: sub account id
+          type: string
+          format: uuid
+          example: acc_xyz
+        name:
+          description: sub account name
+          type: string
+          example: The Shire Haberdashery
+        account_type:
+          description: sub account type (live or test)
+          type: string
+          example: live
+        status:
+          description: sub account status
+          type: string
+          enum:
+          - created
+          - submitted
+          - information_needed
+          - rejected
+          - enabled
+          - disabled
+          - archived
+          example: enabled
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        platform_account_id:
+          description: id of associated platform account
+          type: string
+          format: uuid
+          example: acc_xyz
+        payout_account_id:
+          description: id of active payout bank account
+          type: string
+          format: uuid
+          example: ba_xyz
+        business_id:
+          description: id of associated business
+          type: string
+          format: uuid
+          example: biz_xyz
+        application_fee_rates:
+          type: array
+          description: list of associated application fee rates
+        processing_ready:
+          description: sub account ready for processing
+          type: boolean
+          example: false
+        payout_ready:
+          description: sub account ready for payouts
+          type: boolean
+          example: false
+        related_accounts:
+          description: when a live sub account is created, a related test account is automatically created; this provides both ids
+          type: object
+          properties:
+            live_account_id:
+              type: string
+              format: uuid
+              description: live sub account id (this will be nil if a sub account was created with test credentials)
+              example: acc_xyz
+            test_account_id:
+              type: string
+              format: uuid
+              description: test sub account id
+              example: acc_xyz
+        payments_activated_on:
+          description: date and time when the first successful payment was processed on this sub account
+          type:
+          - string
+          - 'null'
+          format: date-time
+          example: '2021-01-15T12:00:00Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
     Checkout:
       type: object
       properties:
@@ -2043,6 +1605,313 @@ components:
           description: list of checkout completion attempts, if any
           items:
             $ref: '#/components/schemas/CheckoutCompletionAttempt'
+    ReportPaymentListParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - payment_list
+        payment_status:
+          description: the payment status to filter by
+          type: string
+          enum:
+          - authorized
+          - failed
+          - succeeded
+          - canceled
+          example: succeeded
+        payment_method_id:
+          description: the payment method id to filter by
+          type: string
+          example: pm_xyz
+        terminal_id:
+          description: the terminal_id to filter by
+          type: string
+          example: trm_xyz
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    BankAccountPaymentMethod:
+      type: object
+      properties:
+        bank_account:
+          $ref: '#/components/schemas/BankAccount'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    ReportSubAccountSummaryParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - sub_account_summary
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    ReportInterchangeFeeParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - interchange_fee
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    PayoutSetting:
+      type: object
+      properties:
+        public_id:
+          description: unique payout setting id
+          type: string
+          example: stpo_213abc
+        account_id:
+          description: unique id of the associated account
+          type: string
+          example: acc_123abc
+        enabled:
+          description: whether the payout setting is currently enabled
+          type: boolean
+          example: true
+        interval:
+          description: payout frequency
+          type: string
+          example: daily
+        statement_descriptor:
+          description: custom text to appear on bank statements
+          type: string
+          example: Name of Account
+    TerminalsOrder:
+      type: object
+      properties:
+        id:
+          description: unique terminal order id
+          type: string
+          example: tord_xyz
+        business_id:
+          type: string
+          format: uuid
+          example: biz_xyz
+        account_id:
+          type: string
+          format: uuid
+          example: acc_xyz
+        order_type:
+          type: string
+          enum:
+          - boarding_only
+          - boarding_shipping
+          example: boarding_only
+        order_status:
+          type: string
+          enum:
+          - created
+          - submitted
+          - in_progress
+          - completed
+          - on_hold
+          - canceled
+          description: status of the order
+        company_name:
+          type: string
+          description: business legal name when the terminal order was created
+          example: Business Name
+        mcc:
+          type: string
+          description: Merchant Category Code
+          example: 7998
+        receiver_name:
+          type: string
+          description: name of the person receiving the terminal
+          example: John Doe
+        contact_first_name:
+          type: string
+          description: company's representative first name
+          example: John
+        contact_last_name:
+          type: string
+          description: company's representative last name
+          example: Doe
+        contact_email:
+          type: string
+          description: company's contact email
+          example: john.doe@example.com
+        contact_phone_number:
+          type: string
+          description: company's contact phone number
+          example: 2125554567
+        line1:
+          type: string
+          example: 123 Main St
+        line2:
+          type: string
+          example: Apt 4B
+        city:
+          type: string
+          example: Minneapolis
+        state:
+          type: string
+          example: MN
+        postal_code:
+          type: string
+          example: 55401
+        time_zone:
+          type: string
+          description: determined by postal code
+          example: US/Central
+        country:
+          type: string
+          example: USA
+        shipping_tracking_reference:
+          type: string
+          description: FedEx tracking number associated with the terminal order shipment. This field is populated only when the terminal order status is completed and the order includes a physical shipment. Always null for boarding_only terminal orders, as no shipment occurs.
+          example: 12345678
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        terminals:
+          type: array
+          description: list of ordered terminals
+          items:
+            type: object
+            properties:
+              terminal_id:
+                type: string
+                format: uuid
+                description: unique terminal id
+                example: tmn_abc
+              terminal_did:
+                type: string
+                description: terminal device identification
+                example: '12345678'
+              model_name:
+                type: string
+                enum:
+                - V400m
+                - P400
+                - E285
+                example: V400m
+    ReportProceedsParameters:
+      type: object
+      required:
+      - report_type
+      properties:
+        report_type:
+          type: string
+          enum:
+          - proceeds
+        start_date:
+          type: string
+          format: date
+          example: '2025-12-25'
+          description: Start date to filter by. Maximum allowed date rage is 1 month
+        end_date:
+          type: string
+          format: date
+          example: '2025-12-30'
+          description: End date to filter by. Maximum allowed date rage is 1 month
+        nickname:
+          description: the report nickname
+          type: string
+          example: My Report
+    PayoutBankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account id
+          type: string
+          format: uuid
+        full_name:
+          description: account holder's full name
+          type: string
+        bank_name:
+          description: name of bank
+          type: string
+        account_number_last4:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        routing_number:
+          type: string
+        country:
+          type: string
+          enum:
+          - US
+          - CA
+          example: US
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        nickname:
+          type: string
+        account_type:
+          type: string
+          enum:
+          - checking
     CheckoutCompletionAttempt:
       type: object
       properties:
@@ -2124,211 +1993,125 @@ components:
           type: string
           format: date-time
           example: '2024-01-01T12:00:00Z'
-    PayoutBankAccount:
+    Fee:
       type: object
+      description: A fee object specifying type and amount
       properties:
-        id:
-          description: unique bank account id
-          type: string
-          format: uuid
-        full_name:
-          description: account holder's full name
-          type: string
-        bank_name:
-          description: name of bank
-          type: string
-        account_number_last4:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        routing_number:
-          type: string
-        country:
+        type:
           type: string
           enum:
-          - US
-          - CA
-          example: US
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        nickname:
-          type: string
-        account_type:
-          type: string
-          enum:
-          - checking
-    Card:
-      type: object
-      properties:
-        id:
-          description: unique card id
-          type: string
-          format: uuid
-          example: pm_123xyz
-        acct_last_four:
-          description: last 4 digits of the card number
-          type: string
-          example: 4242
-        brand:
-          description: card brand or bank name
-          example: Visa
-        digital_wallet:
-          description: which digital wallet provider the card is tied to
-          type:
-          - string
-          - 'null'
-          enum:
-          - apple_pay
-          - google_pay
-          - null
-          example: apple_pay
-        name:
-          description: card or account holder name
-          type:
-          - string
-          - 'null'
-          example: Amanda Kessel
-        token:
-          description: 'same value as unique card id; can be saved and used to process multiple
+          - processing_fee
+          - platform_fee
+          description: 'The type of fee:
 
-            payments with the same card
+            - `processing_fee`: Fees related to payment processing costs
+
+            - `platform_fee`: Fees for your platform''s services
 
             '
-          example: pm_123xyz
-        month:
-          description: expiration date month
-          example: '5'
-        year:
-          description: expiration date year
-          example: '2042'
-        metadata:
-          type:
-          - object
-          - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this card
-          example: {}
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        address_line1_check:
-          description: Result of the address line 1 verification check. `pass` — matches the cardholder's address on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no address was provided for verification.
-          type: string
-          example: unchecked
-          enum:
-          - fail
-          - pass
-          - unavailable
-          - unchecked
-        address_postal_code_check:
-          description: Result of the postal code verification check. `pass` — matches the cardholder's postal code on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no postal code was provided for verification.
-          type: string
-          example: unchecked
-          enum:
-          - fail
-          - pass
-          - unavailable
-          - unchecked
-    ReportSubAccountSummaryParameters:
-      type: object
-      required:
-      - report_type
-      properties:
-        report_type:
-          type: string
-          enum:
-          - sub_account_summary
-        start_date:
-          type: string
-          format: date
-          example: '2025-12-25'
-          description: Start date to filter by. Maximum allowed date rage is 1 month
-        end_date:
-          type: string
-          format: date
-          example: '2025-12-30'
-          description: End date to filter by. Maximum allowed date rage is 1 month
-        nickname:
-          description: the report nickname
-          type: string
-          example: My Report
-    Refund:
-      type: object
-      properties:
-        id:
-          description: refund unique id
-          type: string
-          example: re_xyz
-        payment_id:
-          description: the payment for which this refund is being issued
-          type: string
-          format: uuid
-          example: py_xyz
+          example: processing_fee
         amount:
-          description: the amount of this refund in cents
-          type: number
-          example: 100
-        description:
+          type: integer
+          description: Fee amount in cents
+          example: 350
+      required:
+      - type
+      - amount
+    PaymentSetting:
+      type: object
+      properties:
+        id:
+          description: unique payment setting id
           type: string
-          description: an optional note about this refund
-          example: customer canceled their order
-        reason:
-          description: the reason this refund is being issued
+          example: stpy_123abc
+        account_id:
+          description: unique id of the associated account
           type: string
-          example: duplicate
-          enum:
-          - duplicate
-          - fraudulent
-          - customer_request
-        status:
-          description: the status of this refund
+          example: acc_123abc
+        mcc_code:
+          description: merchant category code configured
           type: string
-          example: succeeded
-          enum:
-          - pending
-          - succeeded
-          - failed
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this refund
-          example: {}
-        returned_fees:
-          type: array
-          description: 'Array of returned fee objects showing the fees returned to the merchant with this refund.
-
-            Present when fees were specified in the refund request.
-
-            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
-
-            '
-          items:
-            $ref: '#/components/schemas/ReturnedFeeResponse'
-          example:
-          - id: rtfee_xyz
-            payment_fee_id: pyfee_abc
-            type: processing_fee
-            returned_amount: 175
-            original_amount: 350
-            currency: usd
-            remaining_amount: 175
-        created_at:
+          example: '5045'
+        credit_card_payments:
+          description: credit card payments enabled for processing
+          type: boolean
+          example: true
+        ach_payments:
+          description: ach payments enabled for processing
+          type: boolean
+          example: true
+        card_present:
+          description: card present feature enabled for processing
+          type: boolean
+          example: false
+        bnpl_payments:
+          description: buy now pay later feature enabled
+          type: boolean
+          example: false
+        insurance_payments:
+          description: insurance feature enabled
+          type: boolean
+          example: false
+        platform_wallet_account:
+          description: wether this account is configured as platform_wallet_account
+          type: boolean
+          example: false
+    DisputeResponse:
+      type: object
+      properties:
+        additional_statement:
           type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
+          description: any additional evidence or statements
+        cancellation_policy_disclosure:
           type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
+          description: an explanation of how and when the customer was shown your cancellation policy prior to purchase
+        cancellation_rebuttal:
+          type: string
+          description: a justification for why the customer’s subscription was not canceled
+        customer_billing_address:
+          type: string
+          description: the billing address provided by the customer
+        customer_email_address:
+          type: string
+          description: the email address of the customer
+        customer_name:
+          type: string
+          description: the name of the customer
+        customer_purchase_ip_address:
+          type: string
+          description: the IP address that the customer used when making the purchase
+        duplicate_charge_explanation:
+          type: string
+          description: an explanation of the difference between the disputed charge versus the prior charge that appears to be a duplicate
+        product_description:
+          type: string
+          description: a description of the product or service that was sold
+        refund_policy_disclosure:
+          type: string
+          description: documentation demonstrating that the customer was shown your refund policy prior to purchase
+        refund_refusal_explanation:
+          type: string
+          description: justification for why the customer is not entitled to a refund
+        service_date:
+          type: string
+          description: the date on which the customer received or began receiving the purchased service
+          example: '2024-10-31'
+        shipping_address:
+          type: string
+          description: the address to which a physical product was shipped
+        shipping_carrier:
+          type: string
+          description: the delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc. If multiple carriers were used for this purchase, please separate them with commas
+        shipping_date:
+          type: string
+          description: the date on which a physical product began its route to the shipping address
+          example: '2024-10-31'
+        shipping_tracking_number:
+          type: string
+          description: the tracking number for a physical product. If multiple tracking numbers were generated for this purchase, please separate them with commas
+        duplicate_charge_original_payment_id:
+          type: string
+          description: the payment id for the prior charge which appears to be a duplicate of the disputed charge
     Payout:
       type: object
       properties:
@@ -2421,147 +2204,64 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    SubAccount:
+    Report:
       type: object
       properties:
         id:
-          description: sub account id
+          description: report unique id
           type: string
-          format: uuid
-          example: acc_xyz
-        name:
-          description: sub account name
-          type: string
-          example: The Shire Haberdashery
-        account_type:
-          description: sub account type (live or test)
-          type: string
-          example: live
-        status:
-          description: sub account status
-          type: string
-          enum:
-          - created
-          - submitted
-          - information_needed
-          - rejected
-          - enabled
-          - disabled
-          - archived
-          example: enabled
-        currency:
-          type: string
-          enum:
-          - usd
-          - cad
-          example: usd
-        platform_account_id:
-          description: id of associated platform account
-          type: string
-          format: uuid
-          example: acc_xyz
-        payout_account_id:
-          description: id of active payout bank account
-          type: string
-          format: uuid
-          example: ba_xyz
-        business_id:
-          description: id of associated business
-          type: string
-          format: uuid
-          example: biz_xyz
-        application_fee_rates:
-          type: array
-          description: list of associated application fee rates
-        processing_ready:
-          description: sub account ready for processing
-          type: boolean
-          example: false
-        payout_ready:
-          description: sub account ready for payouts
-          type: boolean
-          example: false
-        related_accounts:
-          description: when a live sub account is created, a related test account is automatically created; this provides both ids
-          type: object
-          properties:
-            live_account_id:
-              type: string
-              format: uuid
-              description: live sub account id (this will be nil if a sub account was created with test credentials)
-              example: acc_xyz
-            test_account_id:
-              type: string
-              format: uuid
-              description: test sub account id
-              example: acc_xyz
-        payments_activated_on:
-          description: date and time when the first successful payment was processed on this sub account
+          example: rpt_xyz
+        report_type:
+          $ref: '#/components/schemas/ReportType'
+        nickname:
+          description: the report nickname
           type:
           - string
           - 'null'
-          format: date-time
-          example: '2021-01-15T12:00:00Z'
+          example: My Report
+        status:
+          description: the report status
+          type: string
+          example: scheduled
+          enum:
+          - scheduled
+          - processing
+          - completed
+          - failed
+          - canceled
+          - expired
+        scheduled_at:
+          description: when the report was scheduled
+          type: string
+          format: date
+          example: '2025-12-25T14:44:45.026Z'
+        run_at:
+          description: when the report started processing
+          type: string
+          format: date
+          example: '2025-12-30T14:44:45.026Z'
         created_at:
+          description: when the report was created
           type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
+          format: date
+          example: '2025-12-31T14:44:45.026Z'
+        error_description:
+          description: error description in case of errors
           type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    ReportParameters:
-      oneOf:
-      - allOf:
-        - $ref: '#/components/schemas/ReportProceedsParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportPayoutParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportInterchangeFeeParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportSubAccountSummaryParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
-      - allOf:
-        - $ref: '#/components/schemas/ReportPaymentListParameters'
-        - type: object
-          properties:
-            account_id:
-              type: string
-              example: acc_xyz
-            platform_account_id:
-              type: string
-              example: acc_xyz
+        account_id:
+          description: the account id the report was created for
+          type: string
+          example: acc_xyz
+        presigned_url:
+          description: the url to download the report when completed
+          type: string
+          format: url
+        platform_account_id:
+          description: the platform account id the report was created for
+          type: string
+          example: acc_xyz
+        parameters:
+          $ref: '#/components/schemas/ReportParameters'
     CardPaymentMethod:
       type: object
       properties:
@@ -2585,6 +2285,306 @@ components:
           - string
           - 'null'
           example: acc_123
+    Card:
+      type: object
+      properties:
+        id:
+          description: unique card id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        acct_last_four:
+          description: last 4 digits of the card number
+          type: string
+          example: 4242
+        brand:
+          description: card brand or bank name
+          example: Visa
+        digital_wallet:
+          description: which digital wallet provider the card is tied to
+          type:
+          - string
+          - 'null'
+          enum:
+          - apple_pay
+          - google_pay
+          - null
+          example: apple_pay
+        name:
+          description: card or account holder name
+          type:
+          - string
+          - 'null'
+          example: Amanda Kessel
+        token:
+          description: 'same value as unique card id; can be saved and used to process multiple
+
+            payments with the same card
+
+            '
+          example: pm_123xyz
+        month:
+          description: expiration date month
+          example: '5'
+        year:
+          description: expiration date year
+          example: '2042'
+        metadata:
+          type:
+          - object
+          - 'null'
+          format: json
+          description: any useful information you'd like to store alongside this card
+          example: {}
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        address_line1_check:
+          description: Result of the address line 1 verification check. `pass` — matches the cardholder's address on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no address was provided for verification.
+          type: string
+          example: unchecked
+          enum:
+          - fail
+          - pass
+          - unavailable
+          - unchecked
+        address_postal_code_check:
+          description: Result of the postal code verification check. `pass` — matches the cardholder's postal code on file; `fail` — does not match; `unavailable` — verification could not be performed; `unchecked` — no postal code was provided for verification.
+          type: string
+          example: unchecked
+          enum:
+          - fail
+          - pass
+          - unavailable
+          - unchecked
+    Refund:
+      type: object
+      properties:
+        id:
+          description: refund unique id
+          type: string
+          example: re_xyz
+        payment_id:
+          description: the payment for which this refund is being issued
+          type: string
+          format: uuid
+          example: py_xyz
+        amount:
+          description: the amount of this refund in cents
+          type: number
+          example: 100
+        description:
+          type: string
+          description: an optional note about this refund
+          example: customer canceled their order
+        reason:
+          description: the reason this refund is being issued
+          type: string
+          example: duplicate
+          enum:
+          - duplicate
+          - fraudulent
+          - customer_request
+        status:
+          description: the status of this refund
+          type: string
+          example: succeeded
+          enum:
+          - pending
+          - succeeded
+          - failed
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this refund
+          example: {}
+        returned_fees:
+          type: array
+          description: 'Array of returned fee objects showing the fees returned to the merchant with this refund.
+
+            Present when fees were specified in the refund request.
+
+            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
+
+            '
+          items:
+            $ref: '#/components/schemas/ReturnedFeeResponse'
+          example:
+          - id: rtfee_xyz
+            payment_fee_id: pyfee_abc
+            type: processing_fee
+            returned_amount: 175
+            original_amount: 350
+            currency: usd
+            remaining_amount: 175
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    CheckoutCompletion:
+      type: object
+      properties:
+        id:
+          description: unique checkout completion id
+          type: string
+          example: chc_xyz
+        payment_mode:
+          type: string
+          example: ecom
+          enum:
+          - ecom
+          - bnpl
+          - card_present
+        payment_token:
+          type: string
+          example: pm_xyz123
+          description: the payment method token used to process the payment, only for ecom payments
+        status:
+          type: string
+          enum:
+          - succeeded
+          - failed
+          - processing
+          example: succeeded
+          description: the status of the completion, only succeeded or failed
+        payment_status:
+          type: string
+          enum:
+          - succeeded
+          - failed
+          - pending
+          - canceled
+          - skipped
+          example: succeeded
+          description: depending upon payment mode, the status of the payment API call, bnpl transaction, or card reader transaction.
+        payment_error_code:
+          type: string
+          example: card_declined
+          description: when payment fails, related error code
+        payment_error_description:
+          type: string
+          example: Your card was declined
+          description: when payment fails, related error description
+        payment_response:
+          allOf:
+          - type: object
+          - description: payment object if completion attempt was successful, error object if not successful
+          - $ref: '#/components/schemas/CardPaymentWithEnvelope'
+        checkout_id:
+          type: string
+          format: uuid
+          description: id of the checkout for this completion
+          example: cho_xyz123
+        additional_transactions:
+          type: array of objects
+          description: legacy attribute, other transactions processed during checkout completion. For example, insurance payments
+        checkout:
+          $ref: '#/components/schemas/Checkout'
+        payment_id:
+          type: string
+          format: uuid
+          example: py_xyz123
+          description: id of the payment associated with this checkout, when successful
+        payment_method_id:
+          type: string
+          format: uuid
+          example: pm_xyz123
+          description: id of the payment associated with this checkout, when successful
+        terminal_id:
+          type: string
+          format: uuid
+          example: trm_xyz123
+          description: id of the terminal used for this checkout, when mode is card present
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+    ApplicationFee:
+      type: object
+      properties:
+        id:
+          description: unique application fee id
+          type: string
+          format: uuid
+          example: fee_123xyz
+        amount:
+          description: application fee amount, in cents
+          type: number
+          example: 150
+        currency:
+          type: string
+          enum:
+          - usd
+          - cad
+          example: usd
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    DisputeEvidence:
+      type: object
+      properties:
+        id:
+          description: unique dispute evidence id
+          type: string
+          example: dpe_xyz
+        file_name:
+          type: string
+          example: receipt.pdf
+          description: dispute evidence file name
+        file_type:
+          type: string
+          description: dispute evidence file type
+          example: application/pdf
+          enum:
+          - image/jpeg
+          - image/png
+          - application/pdf
+          - application/zip
+          - application/x-zip-compressed
+        dispute_evidence_type:
+          type: string
+          description: dispute evidence type matching the file that will be uploaded
+          example: receipt
+          enum:
+          - cancellation_policy
+          - customer_communication
+          - customer_signature
+          - duplicate_charge_documentation
+          - receipt
+          - refund_policy
+          - service_documentation
+          - shipping_documentation
+          - uncategorized_file
+        status:
+          type: string
+          description: dispute evidence status
+          enum:
+          - pending
+          - uploaded
+        description:
+          type: string
+          description: description of the dispute evidence file that will be uploaded
+        presigned_url:
+          type: string
+          description: url that should be used to submit a put request to upload the evidence file
 x-refined-from:
 - justifi-openapi-original.yml
 - justifi-events-api-openapi.yml
