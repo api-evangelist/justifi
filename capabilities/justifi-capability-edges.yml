@@ -1,0 +1,36 @@
+slug: justifi
+provider: JustiFi
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Payments
+  spec_file: justifi-payments-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.75
+  evidence: POST /payments/{id}/capture  CapturePayment; POST /payments/{id}/refunds  CreateRefund; POST
+    /payments/{id}/void  VoidPayment
+  reason: Authorise, capture, void and refund operations are payment authorisation and collection. BC-4250.40
+    explicitly covers payment authorisation and payment-method management, making it the closest fit despite
+    the subscription-oriented parent.
+- tag: Payment Methods
+  spec_file: justifi-payment-methods-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.7
+  evidence: 'POST /payment_methods  CreatePaymentMethod; schemas: CreateCard, CreateBankAccount, BankAccountPaymentMethodWithStatus'
+  reason: Tokenisation and lifecycle management of cards and bank accounts is squarely 'payment-method
+    management' as described in BC-4250.40. The L1's subscription-billing framing is broader than this
+    vendor's merchant-payments context, so not maximal confidence.
