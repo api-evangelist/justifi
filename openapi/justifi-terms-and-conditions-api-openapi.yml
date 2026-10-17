@@ -83,6 +83,15 @@ paths:
                           type: string
                           example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15
 components:
+  parameters:
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
   schemas:
     Envelope:
       type: object
@@ -102,15 +111,6 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-  parameters:
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:

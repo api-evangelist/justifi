@@ -89,24 +89,33 @@ paths:
                     data:
                       $ref: '#/components/schemas/BalanceTransaction'
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    sub-account:
+      in: header
+      name: Sub-Account
+      schema:
+        type: string
+      required: false
+      example: acc_123xyz
+      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
+
+        '
   schemas:
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -126,6 +135,41 @@ components:
           description: the encoded id of the first record in the current list
           type: string
           example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     BalanceTransaction:
       type: object
       properties:
@@ -233,50 +277,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    sub-account:
-      in: header
-      name: Sub-Account
-      schema:
-        type: string
-      required: false
-      example: acc_123xyz
-      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
-
-        '
 x-tagGroups:
 - name: Authorization
   tags:

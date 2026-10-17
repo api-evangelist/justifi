@@ -290,43 +290,33 @@ paths:
         '204':
           description: The request was sent to the terminal
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    sub-account:
+      in: header
+      name: Sub-Account
+      schema:
+        type: string
+      required: false
+      example: acc_123xyz
+      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
+
+        '
   schemas:
-    TerminalStatus:
-      type: object
-      properties:
-        id:
-          description: unique terminal id
-          type: string
-          example: trm_abc123
-        status:
-          description: current terminal status
-          example: CONNECTED
-          type: string
-        last_date_time_connected:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        last_date_time_active:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -409,6 +399,23 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
     Envelope:
       type: object
       properties:
@@ -427,32 +434,25 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    sub-account:
-      in: header
-      name: Sub-Account
-      schema:
-        type: string
-      required: false
-      example: acc_123xyz
-      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
-
-        '
+    TerminalStatus:
+      type: object
+      properties:
+        id:
+          description: unique terminal id
+          type: string
+          example: trm_abc123
+        status:
+          description: current terminal status
+          example: CONNECTED
+          type: string
+        last_date_time_connected:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        last_date_time_active:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
 x-tagGroups:
 - name: Authorization
   tags:

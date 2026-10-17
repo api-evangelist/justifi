@@ -328,469 +328,23 @@ paths:
                     data:
                       $ref: '#/components/schemas/BusinessResponse'
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
   schemas:
-    AddressResponse:
-      type: object
-      properties:
-        id:
-          description: unique address id
-          type: string
-          example: addr_123xyz
-        line1:
-          type: string
-          example: 123 Example St
-        line2:
-          type: string
-          example: Suite 101
-        city:
-          type: string
-          example: Minneapolis
-        state:
-          type: string
-          example: MN
-        postal_code:
-          type: string
-          example: '55555'
-        country:
-          type: string
-          example: USA
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    EntityBankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account id
-          type: string
-          format: uuid
-          example: ba_123xyz
-        account_owner_name:
-          description: name of the account owner
-          type: string
-          example: Napheesa Collier
-        account_type:
-          description: type of the account
-          type: string
-          enum:
-          - checking
-          - savings
-          example: checking
-        acct_last_four:
-          description: last 4 digits of the account number
-          type: string
-          example: '6789'
-        routing_number:
-          description: routing number for account
-          type: string
-          example: '110000000'
-        bank_name:
-          description: name of the bank
-          type: string
-          example: Wells Fargo
-        country:
-          description: country for the bank account
-          type: string
-          enum:
-          - US
-          - CA
-        currency:
-          description: currency for the bank account
-          type: string
-          enum:
-          - usd
-          - cad
-        nickname:
-          description: nickname for the bank account
-          type: string
-          example: Phee's money
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example: {}
-        business_id:
-          type: string
-          format: uuid
-          example: biz_123abc
-        platform_account_id:
-          type: string
-          format: uuid
-          example: acc_123abc
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
-    AdditionalQuestions:
-      type: object
-      properties:
-        business_revenue:
-          type: string
-          example: '84220'
-          description: amount of money the company receives from its primary business activities
-        business_payment_volume:
-          type: string
-          example: '1000000'
-          description: annual credit card & ACH volume anticipated to process with Justifi
-        business_when_service_received:
-          type: string
-          example: Within 7 days
-          description: how long after paying will your customers typically receive their goods or services
-        business_recurring_payments:
-          type: string
-          example: 'true'
-          description: business offer recurring payments
-        business_recurring_payments_percentage:
-          type: string
-          example: 50% monthly, 50% annual
-          description: percentage of revenue is generated from each recurring payment type offered
-        business_seasonal:
-          type: string
-          example: No. The business revenue is generated evenly throughout the year
-          description: is the business seasonal
-        business_other_payment_details:
-          type: string
-          example: 50% of revenue is taken 90 days in advance of service and 50% of revenue is taken 30 days in advance of service
-          description: anything else you would like us to know about how your customers pay the business
-        business_purchase_order_volume:
-          type: string
-          example: '150'
-          description: total number of purchase orders made by a business
-        business_invoice_volume:
-          type: string
-          example: '500'
-          description: total number of invoices generated by a business
-        business_fund_use_intent:
-          type: string
-          example: expanding marketing efforts
-          description: planned purpose for which a business intends to use funds
-        equipment_invoice:
-          type: string
-          example: $10,000 invoice for computer equipment
-          description: document specifying the cost and details of equipment purchased
-        business_invoice_number:
-          type: string
-          example: 202105-001
-          description: unique identifier assigned to a specific invoice issued by a business
-        business_invoice_amount:
-          type: string
-          example: $4500
-          description: total monetary value stated on an invoice issued by a business
-        business_purchase_order_number:
-          type: string
-          example: '120'
-          description: number of unique purchase orders made by a business
-        industry_code:
-          type: string
-          example: '541512'
-          description: numerical or alphanumeric code that classifies businesses according to their industry
-        duns_number:
-          type: string
-          example: '123456789'
-          description: unique nine-digit identification number assigned to a business entity
-        business_payment_decline_volume:
-          type: string
-          example: '500'
-          description: total number of payment declines experienced by a business
-        business_refund_volume:
-          type: string
-          example: '100'
-          description: total number of refunds issued by a business
-        business_dispute_volume:
-          type: string
-          example: '50'
-          description: total number of disputes raised by customers against a business
-        business_receivable_volume:
-          type: string
-          example: US $100,000
-          description: total value of outstanding payments owed to a business
-        business_future_scheduled_payment_volume:
-          type: string
-          example: '200'
-          description: total number of future scheduled payments for a business
-        business_dispute_win_rate:
-          type: string
-          example: 75%
-          description: percentage of business disputes won out of the total number of disputes
-        length_of_business_relationship:
-          type: string
-          example: 5 years
-          description: duration of a business relationship between two parties
-    Document:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: doc_abc123
-        description:
-          type: string
-          example: My Document
-          description: description of the document, used for your reference
-        file_name:
-          type: string
-          example: my_document
-          description: file name of the document
-        file_type:
-          type: string
-          example: pdf
-          description: the file media type/extension of the file you are uploading. For example, text/plain, application/pdf, image/png
-        document_type:
-          type: string
-          enum:
-          - articles_of_incorporation
-          - balance_sheet
-          - bank_statement
-          - birth_certificate
-          - business_registration
-          - citizenship_card
-          - driver_license
-          - foreign_passport
-          - government_id
-          - nexus_card
-          - passport
-          - profit_and_loss_statement
-          - resident_card
-          - sin_card
-          - ssn_card
-          - status_card
-          - tax_return
-          - voided_check
-          - other
-          example: balance_sheet
-        business_id:
-          type: string
-          format: uuid
-          example: biz_abc123
-          description: the business id to associate with this document (one of business id or identity id is required)
-        identity_id:
-          type: string
-          format: uuid
-          example: idty_abc123
-          description: the identity id to associate with this document (one of business id or identity id is required)
-        presigned_url:
-          type: string
-          format: url
-          description: url used to PUT or GET the document to our cloud provider. This is not returned via the list API
-          example: https://test.test/doc_abc123/file_name.pdf
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this document
-          additionalProperties: true
-          example:
-            language: english
-            social_network: '@person'
-        status:
-          type: string
-          enum:
-          - pending uploaded canceled
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    IdentityResponse:
-      type: object
-      properties:
-        id:
-          description: unique identity id
-          type: string
-          example: idty_xyz
-        platform_account_id:
-          type: string
-          format: uuid
-          example: acc_xyz
-        business_id:
-          type: string
-          format: uuid
-          example: biz_xyz
-          description: associated business
-        name:
-          type: string
-          example: Person Name
-          description: legal name
-        title:
-          type: string
-          example: President
-          description: job title
-        email:
-          type: string
-          example: person.name@justifi.ai
-          description: email address
-        phone:
-          type: string
-          example: '6124011111'
-          description: phone number
-        dob_day:
-          type: string
-          example: '01'
-          description: two-digit birth day
-        dob_month:
-          type: string
-          example: '01'
-          description: two-digit birth month
-        dob_year:
-          type: string
-          example: '1980'
-          description: four-digit birth year (must be at least 18 years old)
-        ssn_last4:
-          type: string
-          example: '6789'
-          description: last four digits of social security number (computed from identification_number)
-        is_owner:
-          type: boolean
-          example: true
-          description: if an identity owns 25% or more of the business, they are considered an owner
-        ownership_percentage:
-          type: integer
-          minimum: 0
-          maximum: 100
-          example: 25
-          description: percentage of the business owned by this identity (0–100); only returned when is_owner is true
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this identity
-        address:
-          $ref: '#/components/schemas/AddressResponse'
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/Document'
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    Identity:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Person Name
-          description: legal name
-        title:
-          type: string
-          example: President
-          description: job title
-        email:
-          type: string
-          example: person.name@justifi.ai
-          description: email address
-        phone:
-          type: string
-          example: '6124011111'
-          description: phone number
-        dob_day:
-          type: string
-          example: '01'
-          description: two-digit birth day
-        dob_month:
-          type: string
-          example: '01'
-          description: two-digit birth month
-        dob_year:
-          type: string
-          example: '1980'
-          description: four-digit birth year (must be at least 18 years old)
-        identification_number:
-          type: string
-          example: '123456789'
-          description: full social security number
-        is_owner:
-          type: boolean
-          description: if an identity owns 25% or more of the business, they are considered an owner
-        ownership_percentage:
-          type: integer
-          minimum: 0
-          maximum: 100
-          example: 25
-          description: percentage of the business owned by this identity (0–100); only returned when the identity owns a business (proprietor_id set), not based on the is_owner column. Only owners with at least 25% ownership should be included.
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this identity
-          additionalProperties: true
-          example:
-            language: english
-            social_network: '@person'
-        address:
-          oneOf:
-          - $ref: '#/components/schemas/Address'
-          - type: object
-            properties:
-              id:
-                type: string
     BusinessResponse:
       type: object
       properties:
@@ -922,6 +476,392 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    EntityBankAccount:
+      type: object
+      properties:
+        id:
+          description: unique bank account id
+          type: string
+          format: uuid
+          example: ba_123xyz
+        account_owner_name:
+          description: name of the account owner
+          type: string
+          example: Napheesa Collier
+        account_type:
+          description: type of the account
+          type: string
+          enum:
+          - checking
+          - savings
+          example: checking
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: '6789'
+        routing_number:
+          description: routing number for account
+          type: string
+          example: '110000000'
+        bank_name:
+          description: name of the bank
+          type: string
+          example: Wells Fargo
+        country:
+          description: country for the bank account
+          type: string
+          enum:
+          - US
+          - CA
+        currency:
+          description: currency for the bank account
+          type: string
+          enum:
+          - usd
+          - cad
+        nickname:
+          description: nickname for the bank account
+          type: string
+          example: Phee's money
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example: {}
+        business_id:
+          type: string
+          format: uuid
+          example: biz_123abc
+        platform_account_id:
+          type: string
+          format: uuid
+          example: acc_123abc
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    Identity:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Person Name
+          description: legal name
+        title:
+          type: string
+          example: President
+          description: job title
+        email:
+          type: string
+          example: person.name@justifi.ai
+          description: email address
+        phone:
+          type: string
+          example: '6124011111'
+          description: phone number
+        dob_day:
+          type: string
+          example: '01'
+          description: two-digit birth day
+        dob_month:
+          type: string
+          example: '01'
+          description: two-digit birth month
+        dob_year:
+          type: string
+          example: '1980'
+          description: four-digit birth year (must be at least 18 years old)
+        identification_number:
+          type: string
+          example: '123456789'
+          description: full social security number
+        is_owner:
+          type: boolean
+          description: if an identity owns 25% or more of the business, they are considered an owner
+        ownership_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 25
+          description: percentage of the business owned by this identity (0–100); only returned when the identity owns a business (proprietor_id set), not based on the is_owner column. Only owners with at least 25% ownership should be included.
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this identity
+          additionalProperties: true
+          example:
+            language: english
+            social_network: '@person'
+        address:
+          oneOf:
+          - $ref: '#/components/schemas/Address'
+          - type: object
+            properties:
+              id:
+                type: string
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: doc_abc123
+        description:
+          type: string
+          example: My Document
+          description: description of the document, used for your reference
+        file_name:
+          type: string
+          example: my_document
+          description: file name of the document
+        file_type:
+          type: string
+          example: pdf
+          description: the file media type/extension of the file you are uploading. For example, text/plain, application/pdf, image/png
+        document_type:
+          type: string
+          enum:
+          - articles_of_incorporation
+          - balance_sheet
+          - bank_statement
+          - birth_certificate
+          - business_registration
+          - citizenship_card
+          - driver_license
+          - foreign_passport
+          - government_id
+          - nexus_card
+          - passport
+          - profit_and_loss_statement
+          - resident_card
+          - sin_card
+          - ssn_card
+          - status_card
+          - tax_return
+          - voided_check
+          - other
+          example: balance_sheet
+        business_id:
+          type: string
+          format: uuid
+          example: biz_abc123
+          description: the business id to associate with this document (one of business id or identity id is required)
+        identity_id:
+          type: string
+          format: uuid
+          example: idty_abc123
+          description: the identity id to associate with this document (one of business id or identity id is required)
+        presigned_url:
+          type: string
+          format: url
+          description: url used to PUT or GET the document to our cloud provider. This is not returned via the list API
+          example: https://test.test/doc_abc123/file_name.pdf
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this document
+          additionalProperties: true
+          example:
+            language: english
+            social_network: '@person'
+        status:
+          type: string
+          enum:
+          - pending uploaded canceled
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    AddressResponse:
+      type: object
+      properties:
+        id:
+          description: unique address id
+          type: string
+          example: addr_123xyz
+        line1:
+          type: string
+          example: 123 Example St
+        line2:
+          type: string
+          example: Suite 101
+        city:
+          type: string
+          example: Minneapolis
+        state:
+          type: string
+          example: MN
+        postal_code:
+          type: string
+          example: '55555'
+        country:
+          type: string
+          example: USA
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+    AdditionalQuestions:
+      type: object
+      properties:
+        business_revenue:
+          type: string
+          example: '84220'
+          description: amount of money the company receives from its primary business activities
+        business_payment_volume:
+          type: string
+          example: '1000000'
+          description: annual credit card & ACH volume anticipated to process with Justifi
+        business_when_service_received:
+          type: string
+          example: Within 7 days
+          description: how long after paying will your customers typically receive their goods or services
+        business_recurring_payments:
+          type: string
+          example: 'true'
+          description: business offer recurring payments
+        business_recurring_payments_percentage:
+          type: string
+          example: 50% monthly, 50% annual
+          description: percentage of revenue is generated from each recurring payment type offered
+        business_seasonal:
+          type: string
+          example: No. The business revenue is generated evenly throughout the year
+          description: is the business seasonal
+        business_other_payment_details:
+          type: string
+          example: 50% of revenue is taken 90 days in advance of service and 50% of revenue is taken 30 days in advance of service
+          description: anything else you would like us to know about how your customers pay the business
+        business_purchase_order_volume:
+          type: string
+          example: '150'
+          description: total number of purchase orders made by a business
+        business_invoice_volume:
+          type: string
+          example: '500'
+          description: total number of invoices generated by a business
+        business_fund_use_intent:
+          type: string
+          example: expanding marketing efforts
+          description: planned purpose for which a business intends to use funds
+        equipment_invoice:
+          type: string
+          example: $10,000 invoice for computer equipment
+          description: document specifying the cost and details of equipment purchased
+        business_invoice_number:
+          type: string
+          example: 202105-001
+          description: unique identifier assigned to a specific invoice issued by a business
+        business_invoice_amount:
+          type: string
+          example: $4500
+          description: total monetary value stated on an invoice issued by a business
+        business_purchase_order_number:
+          type: string
+          example: '120'
+          description: number of unique purchase orders made by a business
+        industry_code:
+          type: string
+          example: '541512'
+          description: numerical or alphanumeric code that classifies businesses according to their industry
+        duns_number:
+          type: string
+          example: '123456789'
+          description: unique nine-digit identification number assigned to a business entity
+        business_payment_decline_volume:
+          type: string
+          example: '500'
+          description: total number of payment declines experienced by a business
+        business_refund_volume:
+          type: string
+          example: '100'
+          description: total number of refunds issued by a business
+        business_dispute_volume:
+          type: string
+          example: '50'
+          description: total number of disputes raised by customers against a business
+        business_receivable_volume:
+          type: string
+          example: US $100,000
+          description: total value of outstanding payments owed to a business
+        business_future_scheduled_payment_volume:
+          type: string
+          example: '200'
+          description: total number of future scheduled payments for a business
+        business_dispute_win_rate:
+          type: string
+          example: 75%
+          description: percentage of business disputes won out of the total number of disputes
+        length_of_business_relationship:
+          type: string
+          example: 5 years
+          description: duration of a business relationship between two parties
     Address:
       type: object
       properties:
@@ -943,22 +883,82 @@ components:
         country:
           type: string
           example: USA
-  parameters:
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
+    IdentityResponse:
+      type: object
+      properties:
+        id:
+          description: unique identity id
+          type: string
+          example: idty_xyz
+        platform_account_id:
+          type: string
+          format: uuid
+          example: acc_xyz
+        business_id:
+          type: string
+          format: uuid
+          example: biz_xyz
+          description: associated business
+        name:
+          type: string
+          example: Person Name
+          description: legal name
+        title:
+          type: string
+          example: President
+          description: job title
+        email:
+          type: string
+          example: person.name@justifi.ai
+          description: email address
+        phone:
+          type: string
+          example: '6124011111'
+          description: phone number
+        dob_day:
+          type: string
+          example: '01'
+          description: two-digit birth day
+        dob_month:
+          type: string
+          example: '01'
+          description: two-digit birth month
+        dob_year:
+          type: string
+          example: '1980'
+          description: four-digit birth year (must be at least 18 years old)
+        ssn_last4:
+          type: string
+          example: '6789'
+          description: last four digits of social security number (computed from identification_number)
+        is_owner:
+          type: boolean
+          example: true
+          description: if an identity owns 25% or more of the business, they are considered an owner
+        ownership_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 25
+          description: percentage of the business owned by this identity (0–100); only returned when is_owner is true
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this identity
+        address:
+          $ref: '#/components/schemas/AddressResponse'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
 x-tagGroups:
 - name: Authorization
   tags:

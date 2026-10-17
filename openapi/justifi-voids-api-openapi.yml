@@ -100,55 +100,188 @@ paths:
                       disputes: []
                     page_info: null
 components:
-  parameters:
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    idempotency-key-header:
-      in: header
-      name: Idempotency-Key
-      schema:
-        type: string
-        format: uuid
-      required: true
-      example: my-request-123abc
-      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
   schemas:
-    BankAccountPaymentMethod:
+    BankAccountPayment:
       type: object
       properties:
-        bank_account:
-          $ref: '#/components/schemas/BankAccount'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
-          type:
-          - string
-          - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
-          type:
-          - string
-          - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
+        id:
+          description: unique payment id
+          type: string
+          example: py_xyz
         account_id:
-          description: account id associated with payment method
+          type: string
+          format: uuid
+          example: acc_xyz
+        amount:
+          description: payment amount in cents
+          type: number
+          example: 10000
+        amount_disputed:
+          description: sum of open or lost disputes for this payment, in cents
+          type: number
+          example: 0
+        amount_refunded:
+          description: sum of refunds for this payment, in cents
+          type: number
+          example: 0
+        amount_refundable:
+          description: amount of this payment currently able to be refunded, in cents
+          type: number
+          example: 10000
+        balance:
+          description: sum of debits and credits for this payment, in cents (reflects the amount this account has earned from this payment). Compiled and calculated value, eventually consistent. To see all changes affecting the payment's balance see [Get Balance Transactions](#operation/GetPaymentBalanceTransactions)
+          type: number
+          example: 99850
+        fee_amount:
+          type: number
+          description: sum of fees for this payment
+          example: 150
+        financial_transaction_id:
+          type: string
+          description: associated financial transaction id
+          example: ft_123xyz
+        captured:
+          description: whether or not this payment is captured
+          type: boolean
+          example: true
+        capture_strategy:
+          type: string
+          example: automatic
+          enum:
+          - automatic
+          - manual
+        currency:
+          type: string
+          enum:
+          - usd
+          example: usd
+        description:
+          type: string
+          description: your meaningful description of the payment (e.g. an order number or other value from your system)
+          example: my_order_xyz
+        disputed:
+          type: boolean
+          description: whether or not this payment has any open or lost disputes
+          example: false
+        disputes:
+          type: array
+          description: list of associated disputes
+          example: []
+        error_code:
+          type: string
+          description: error code if the payment fails
+          example: credit_card_number_invalid
+        error_description:
+          type: string
+          description: text description of the error code
+          example: Credit Card Number Invalid (Failed LUHN checksum)
+        is_test:
+          type: boolean
+          description: whether or not this payment was made using the test account
+          example: true
+        metadata:
+          type: object
+          format: json
+          description: any useful information you'd like to store alongside this payment
+          example: {}
+        payment_intent_id:
+          type: string
+          description: unique id of associated payment intent
+          example: pi_123xyz
+        checkout_id:
+          type: string
+          description: unique id of associated checkout
+          example: cho_123
+        payment_method:
+          $ref: '#/components/schemas/BankAccountPaymentMethod'
+        application_fee:
+          $ref: '#/components/schemas/ApplicationFee'
+        application_fee_rate_id:
+          type: string
+          description: unique id of application fee rate applied to this payment, if any
+          example: afr_123xyz
+        fees:
+          type: array
+          description: 'Array of fee objects showing the fees charged on this payment with their remaining refundable amounts.
+
+            Populated whether the fees were provided via the `fees` array in the payment request or calculated automatically (for example, from a Standard Fee Configuration).
+
+
+            **Note:** This array is empty in the Create Payment response. Fees are processed asynchronously —
+
+            subscribe to payment webhook events (recommended) to receive the full fee objects
+
+            (with `id`, `remaining_amount`, and `currency`), or poll with a subsequent Get Payment request.
+
+
+            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
+
+            '
+          items:
+            $ref: '#/components/schemas/FeeResponse'
+          example:
+          - id: pyfee_abc
+            type: processing_fee
+            amount: 50
+            currency: usd
+            remaining_amount: 50
+            source_configuration_id: sfc_abc123
+            source_fee_type: processing_ecomm
+            refund_id: null
+          - id: pyfee_xyz
+            type: platform_fee
+            amount: 150
+            currency: usd
+            remaining_amount: 150
+            source_configuration_id: sfc_abc123
+            source_fee_type: platform
+            refund_id: null
+        refunded:
+          type: boolean
+          description: whether or not this payment has any refunds
+          example: false
+        status:
+          type: string
+          enum:
+          - pending
+          - authorized
+          - canceled
+          - succeeded
+          - failed
+          - partially_refunded
+          - fully_refunded
+          - disputed
+          description: status of the payment
+        payment_mode:
+          type: string
+          example: ecom
+          enum:
+          - ecom
+          - ach
+          - card_present
+        terminal_id:
+          type: string
+          description: id of terminal used to process a card payment, null for bank account payments
+          example: trm_123xyz
+        transaction_hold:
+          allOf:
+          - type: object
+          - description: present when the payment has been flagged for review and held from payouts
+          - $ref: '#/components/schemas/TransactionHold'
+        expedited:
           type:
-          - string
+          - boolean
           - 'null'
-          example: acc_123
+          description: settlement priority of the payment, only applies to ACH payments
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2021-01-01T12:00:00Z'
     FeeResponse:
       type: object
       description: 'A fee object in API responses. The `fees` array is empty in the Create Payment response —
@@ -217,6 +350,59 @@ components:
       required:
       - type
       - amount
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
+    BankAccountPaymentMethod:
+      type: object
+      properties:
+        bank_account:
+          $ref: '#/components/schemas/BankAccount'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
+          type:
+          - string
+          - 'null'
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
+          type:
+          - string
+          - 'null'
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+    TransactionHold:
+      type: object
+      properties:
+        id:
+          description: unique transaction hold id
+          type: string
+          example: th_123xyz
+        financial_transaction_id:
+          type: string
+          description: financial transaction id the transaction hold is associated to
+          format: uuid
+          example: ft_123xyz
     ApplicationFee:
       type: object
       properties:
@@ -425,29 +611,47 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    CardPaymentMethod:
+    BankAccount:
       type: object
       properties:
-        card:
-          $ref: '#/components/schemas/Card'
-        customer_id:
-          description: customer_id is a deprecated field. Please use our payment method groups instead.
+        id:
+          description: unique bank account payment method id
+          type: string
+          format: uuid
+          example: pm_123xyz
+        account_owner_name:
+          description: account owner name
+          type: string
+          example: Lindsay Whalen
+        account_type:
+          description: type of account (checking, savings, etc.)
+          type: string
+          example: checking
+        bank_name:
+          description: bank name
           type:
           - string
           - 'null'
-          example: cust_xyz
-        signature:
-          description: signature that uniquely identifies a credit card or bank account across payment methods
+          example: Wells Fargo
+        acct_last_four:
+          description: last 4 digits of the account number
+          type: string
+          example: 1111
+        token:
+          description: 'same value as unique bank account id; can be saved and used to process multiple
+
+            payments with the same bank account
+
+            '
+          example: pm_123xyz
+        metadata:
           type:
-          - string
+          - object
           - 'null'
-          example: 4guAJNkVA3lRLVlanNVoBK
-        account_id:
-          description: account id associated with payment method
-          type:
-          - string
-          - 'null'
-          example: acc_123
+          format: json
+          description: any useful information you'd like to store alongside this bank account
+          example:
+            new: info
     Card:
       type: object
       properties:
@@ -525,258 +729,54 @@ components:
           - pass
           - unavailable
           - unchecked
-    BankAccountPayment:
+    CardPaymentMethod:
       type: object
       properties:
-        id:
-          description: unique payment id
-          type: string
-          example: py_xyz
-        account_id:
-          type: string
-          format: uuid
-          example: acc_xyz
-        amount:
-          description: payment amount in cents
-          type: number
-          example: 10000
-        amount_disputed:
-          description: sum of open or lost disputes for this payment, in cents
-          type: number
-          example: 0
-        amount_refunded:
-          description: sum of refunds for this payment, in cents
-          type: number
-          example: 0
-        amount_refundable:
-          description: amount of this payment currently able to be refunded, in cents
-          type: number
-          example: 10000
-        balance:
-          description: sum of debits and credits for this payment, in cents (reflects the amount this account has earned from this payment). Compiled and calculated value, eventually consistent. To see all changes affecting the payment's balance see [Get Balance Transactions](#operation/GetPaymentBalanceTransactions)
-          type: number
-          example: 99850
-        fee_amount:
-          type: number
-          description: sum of fees for this payment
-          example: 150
-        financial_transaction_id:
-          type: string
-          description: associated financial transaction id
-          example: ft_123xyz
-        captured:
-          description: whether or not this payment is captured
-          type: boolean
-          example: true
-        capture_strategy:
-          type: string
-          example: automatic
-          enum:
-          - automatic
-          - manual
-        currency:
-          type: string
-          enum:
-          - usd
-          example: usd
-        description:
-          type: string
-          description: your meaningful description of the payment (e.g. an order number or other value from your system)
-          example: my_order_xyz
-        disputed:
-          type: boolean
-          description: whether or not this payment has any open or lost disputes
-          example: false
-        disputes:
-          type: array
-          description: list of associated disputes
-          example: []
-        error_code:
-          type: string
-          description: error code if the payment fails
-          example: credit_card_number_invalid
-        error_description:
-          type: string
-          description: text description of the error code
-          example: Credit Card Number Invalid (Failed LUHN checksum)
-        is_test:
-          type: boolean
-          description: whether or not this payment was made using the test account
-          example: true
-        metadata:
-          type: object
-          format: json
-          description: any useful information you'd like to store alongside this payment
-          example: {}
-        payment_intent_id:
-          type: string
-          description: unique id of associated payment intent
-          example: pi_123xyz
-        checkout_id:
-          type: string
-          description: unique id of associated checkout
-          example: cho_123
-        payment_method:
-          $ref: '#/components/schemas/BankAccountPaymentMethod'
-        application_fee:
-          $ref: '#/components/schemas/ApplicationFee'
-        application_fee_rate_id:
-          type: string
-          description: unique id of application fee rate applied to this payment, if any
-          example: afr_123xyz
-        fees:
-          type: array
-          description: 'Array of fee objects showing the fees charged on this payment with their remaining refundable amounts.
-
-            Populated whether the fees were provided via the `fees` array in the payment request or calculated automatically (for example, from a Standard Fee Configuration).
-
-
-            **Note:** This array is empty in the Create Payment response. Fees are processed asynchronously —
-
-            subscribe to payment webhook events (recommended) to receive the full fee objects
-
-            (with `id`, `remaining_amount`, and `currency`), or poll with a subsequent Get Payment request.
-
-
-            See [Enhanced Fee Management](https://docs.justifi.tech/api-spec#section/Enhanced-Fee-Management) for full documentation.
-
-            '
-          items:
-            $ref: '#/components/schemas/FeeResponse'
-          example:
-          - id: pyfee_abc
-            type: processing_fee
-            amount: 50
-            currency: usd
-            remaining_amount: 50
-            source_configuration_id: sfc_abc123
-            source_fee_type: processing_ecomm
-            refund_id: null
-          - id: pyfee_xyz
-            type: platform_fee
-            amount: 150
-            currency: usd
-            remaining_amount: 150
-            source_configuration_id: sfc_abc123
-            source_fee_type: platform
-            refund_id: null
-        refunded:
-          type: boolean
-          description: whether or not this payment has any refunds
-          example: false
-        status:
-          type: string
-          enum:
-          - pending
-          - authorized
-          - canceled
-          - succeeded
-          - failed
-          - partially_refunded
-          - fully_refunded
-          - disputed
-          description: status of the payment
-        payment_mode:
-          type: string
-          example: ecom
-          enum:
-          - ecom
-          - ach
-          - card_present
-        terminal_id:
-          type: string
-          description: id of terminal used to process a card payment, null for bank account payments
-          example: trm_123xyz
-        transaction_hold:
-          allOf:
-          - type: object
-          - description: present when the payment has been flagged for review and held from payouts
-          - $ref: '#/components/schemas/TransactionHold'
-        expedited:
-          type:
-          - boolean
-          - 'null'
-          description: settlement priority of the payment, only applies to ACH payments
-          example: true
-        created_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2021-01-01T12:00:00Z'
-    TransactionHold:
-      type: object
-      properties:
-        id:
-          description: unique transaction hold id
-          type: string
-          example: th_123xyz
-        financial_transaction_id:
-          type: string
-          description: financial transaction id the transaction hold is associated to
-          format: uuid
-          example: ft_123xyz
-    BankAccount:
-      type: object
-      properties:
-        id:
-          description: unique bank account payment method id
-          type: string
-          format: uuid
-          example: pm_123xyz
-        account_owner_name:
-          description: account owner name
-          type: string
-          example: Lindsay Whalen
-        account_type:
-          description: type of account (checking, savings, etc.)
-          type: string
-          example: checking
-        bank_name:
-          description: bank name
+        card:
+          $ref: '#/components/schemas/Card'
+        customer_id:
+          description: customer_id is a deprecated field. Please use our payment method groups instead.
           type:
           - string
           - 'null'
-          example: Wells Fargo
-        acct_last_four:
-          description: last 4 digits of the account number
-          type: string
-          example: 1111
-        token:
-          description: 'same value as unique bank account id; can be saved and used to process multiple
-
-            payments with the same bank account
-
-            '
-          example: pm_123xyz
-        metadata:
+          example: cust_xyz
+        signature:
+          description: signature that uniquely identifies a credit card or bank account across payment methods
           type:
-          - object
+          - string
           - 'null'
-          format: json
-          description: any useful information you'd like to store alongside this bank account
-          example:
-            new: info
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
+          example: 4guAJNkVA3lRLVlanNVoBK
+        account_id:
+          description: account id associated with payment method
+          type:
+          - string
+          - 'null'
+          example: acc_123
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    idempotency-key-header:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+        format: uuid
+      required: true
+      example: my-request-123abc
+      description: a string to identify your request (we recommend using a generated uuid, but you may use any unique string) see [Idempotent Requests](https://docs.justifi.tech/api-spec#section/Idempotent-Requests)
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:

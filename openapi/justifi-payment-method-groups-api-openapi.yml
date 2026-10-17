@@ -137,24 +137,43 @@ paths:
         '200':
           description: Payment method successfully removed from group
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
+    sub-account:
+      in: header
+      name: Sub-Account
+      schema:
+        type: string
+      required: false
+      example: acc_123xyz
+      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
+
+        '
+    sub-account-required:
+      in: header
+      name: Sub-Account
+      schema:
+        type: string
+      required: true
+      example: acc_123xyz
+      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
+
+        '
   schemas:
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -207,42 +226,23 @@ components:
         page_info:
           description: information for cursor style pagination, is null for single records
           type: null
-  parameters:
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    sub-account-required:
-      in: header
-      name: Sub-Account
-      schema:
-        type: string
-      required: true
-      example: acc_123xyz
-      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
-
-        '
-    sub-account:
-      in: header
-      name: Sub-Account
-      schema:
-        type: string
-      required: false
-      example: acc_123xyz
-      description: 'the id of the [sub account](https://docs.justifi.tech/api-spec#tag/Sub-Accounts) that this request applies to
-
-        '
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
 x-tagGroups:
 - name: Authorization
   tags:

@@ -180,7 +180,150 @@ paths:
                     data:
                       $ref: '#/components/schemas/SubAccountSettings'
 components:
+  parameters:
+    id-path:
+      in: path
+      name: id
+      schema:
+        type: string
+        format: uuid
+      required: true
+    authorization-header:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      example: Bearer {access_token}
+      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
   schemas:
+    PageInfo:
+      type: object
+      properties:
+        end_cursor:
+          description: the encoded id of the last record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
+        has_next:
+          description: true if the collection contains records following the current list
+          type: boolean
+          default: false
+        has_previous:
+          description: true if the collection contains records ahead of the current list
+          type: boolean
+          default: false
+        start_cursor:
+          description: the encoded id of the first record in the current list
+          type: string
+          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
+    SubAccountSettings:
+      type: object
+      properties:
+        payments:
+          type: object
+          properties:
+            id:
+              description: unique payment settings id
+              type: string
+              example: stpy_7KRQzIYhUGxNscgLJP0Aum
+            account_id:
+              type: string
+              description: unique sub account id this setting is applied to
+              example: acc_123xyz
+            mcc_code:
+              description: merchant category code configured
+              type: string
+              example: '5045'
+            credit_card_payments:
+              description: credit card payments enabled for processing
+              type: boolean
+              example: true
+            ach_payments:
+              description: ach payments enabled for processing
+              type: boolean
+              example: true
+            card_present:
+              description: card present feature enabled for processing
+              type: boolean
+              example: false
+            bnpl_payments:
+              description: buy now pay later feature enabled
+              type: boolean
+              example: false
+            apple_payments:
+              description: apple payments feature enabled
+              type: boolean
+              example: false
+            google_payments:
+              description: google payments feature enabled
+              type: boolean
+              example: false
+            bank_account_verification:
+              description: bank account verification feature enabled
+              type: boolean
+              example: false
+            insurance_payments:
+              description: insurance feature enabled
+              type: boolean
+              example: false
+            platform_wallet_account:
+              description: platform_wallet_account feature enabled
+              type: boolean
+              example: false
+        payouts:
+          type: object
+          properties:
+            id:
+              description: unique payout settings id
+              type: string
+              example: stpo_1FrQmV9ByJEKjpKf5diaA4
+            enabled:
+              description: payouts enabled for the sub account
+              type: boolean
+              example: true
+            statement_descriptor:
+              description: statement descriptor for the payout
+              type: string
+              example: JustiFi
+            settlement_priority:
+              description: null
+              type: enum[standard expedited]
+              example: standard
+    Envelope-list:
+      type: object
+      properties:
+        id:
+          description: the object id
+          type: number
+          example: 1
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the list of objects
+          type: array
+        page_info:
+          description: information for cursor style pagination
+          $ref: '#/components/schemas/PageInfo'
+    Envelope:
+      type: object
+      properties:
+        id:
+          description: the object id, also found in the data object
+          type: string
+          format: uuid
+          example: prefix_xyz (same as id of data object)
+        type:
+          description: the object type, or array of objects
+          type: string
+          example: account
+        data:
+          description: the attributes for the object
+          type: object
+        page_info:
+          description: information for cursor style pagination, is null for single records
+          type: null
     PayoutBankAccount:
       type: object
       properties:
@@ -218,42 +361,6 @@ components:
           type: string
           enum:
           - checking
-    Envelope-list:
-      type: object
-      properties:
-        id:
-          description: the object id
-          type: number
-          example: 1
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the list of objects
-          type: array
-        page_info:
-          description: information for cursor style pagination
-          $ref: '#/components/schemas/PageInfo'
-    PageInfo:
-      type: object
-      properties:
-        end_cursor:
-          description: the encoded id of the last record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDE5OjUyOjM3LjEwNDE3MzAwMCIsIjY4MDliYTU5LTYxYjctNDg3MS05YWFiLWE2Y2MyNmY3M2M1ZCJd
-        has_next:
-          description: true if the collection contains records following the current list
-          type: boolean
-          default: false
-        has_previous:
-          description: true if the collection contains records ahead of the current list
-          type: boolean
-          default: false
-        start_cursor:
-          description: the encoded id of the first record in the current list
-          type: string
-          example: WyIyMDIyLTAyLTA4IDIwOjAxOjU4LjEyMDIzMjAwMCIsIjU5ZTFjNGI1LWFlOWQtNDIyZC04MTVkLWNjNzQ5NzdlYmFjYSJd
     SubAccount:
       type: object
       properties:
@@ -343,113 +450,6 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T12:00:00Z'
-    Envelope:
-      type: object
-      properties:
-        id:
-          description: the object id, also found in the data object
-          type: string
-          format: uuid
-          example: prefix_xyz (same as id of data object)
-        type:
-          description: the object type, or array of objects
-          type: string
-          example: account
-        data:
-          description: the attributes for the object
-          type: object
-        page_info:
-          description: information for cursor style pagination, is null for single records
-          type: null
-    SubAccountSettings:
-      type: object
-      properties:
-        payments:
-          type: object
-          properties:
-            id:
-              description: unique payment settings id
-              type: string
-              example: stpy_7KRQzIYhUGxNscgLJP0Aum
-            account_id:
-              type: string
-              description: unique sub account id this setting is applied to
-              example: acc_123xyz
-            mcc_code:
-              description: merchant category code configured
-              type: string
-              example: '5045'
-            credit_card_payments:
-              description: credit card payments enabled for processing
-              type: boolean
-              example: true
-            ach_payments:
-              description: ach payments enabled for processing
-              type: boolean
-              example: true
-            card_present:
-              description: card present feature enabled for processing
-              type: boolean
-              example: false
-            bnpl_payments:
-              description: buy now pay later feature enabled
-              type: boolean
-              example: false
-            apple_payments:
-              description: apple payments feature enabled
-              type: boolean
-              example: false
-            google_payments:
-              description: google payments feature enabled
-              type: boolean
-              example: false
-            bank_account_verification:
-              description: bank account verification feature enabled
-              type: boolean
-              example: false
-            insurance_payments:
-              description: insurance feature enabled
-              type: boolean
-              example: false
-            platform_wallet_account:
-              description: platform_wallet_account feature enabled
-              type: boolean
-              example: false
-        payouts:
-          type: object
-          properties:
-            id:
-              description: unique payout settings id
-              type: string
-              example: stpo_1FrQmV9ByJEKjpKf5diaA4
-            enabled:
-              description: payouts enabled for the sub account
-              type: boolean
-              example: true
-            statement_descriptor:
-              description: statement descriptor for the payout
-              type: string
-              example: JustiFi
-            settlement_priority:
-              description: null
-              type: enum[standard expedited]
-              example: standard
-  parameters:
-    id-path:
-      in: path
-      name: id
-      schema:
-        type: string
-        format: uuid
-      required: true
-    authorization-header:
-      in: header
-      name: Authorization
-      schema:
-        type: string
-      required: true
-      example: Bearer {access_token}
-      description: the `access_token` value returned from the JustiFi `oauth/token` endpoint (be sure to append `Bearer` before the token)
 x-tagGroups:
 - name: Authorization
   tags:
